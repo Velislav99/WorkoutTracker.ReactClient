@@ -1,24 +1,31 @@
-import { Container, Typography } from '@mui/material'
+import { Container } from '@mui/material'
+import { Routes, Route, BrowserRouter, } from 'react-router-dom';
+
 import Header from './components/header/Header'
 import Footer from './components/footer/Footer'
+import Home from './components/home/Home'
+import Login from './components/login/Login'
+import Register from './components/register/Register'
 
 
 function App() {
 
   return (
+    <BrowserRouter>
+      <Container>
+        <Header />
 
-    <Container>
-      <Header />
-      <Typography variant="h1" align="center" gutterBottom>
-       WKT
-      </Typography>
+        <Routes>
+          
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} /> 
+          <Route path="/register" element={<Register />} /> 
+        </Routes>
+       
+        <Footer/>
+      </Container>
 
-      <Typography variant="h2" align="center" gutterBottom>
-        Workout Tracker
-      </Typography>
-
-      <Footer />
-    </Container>
+    </BrowserRouter>
 
 
   )

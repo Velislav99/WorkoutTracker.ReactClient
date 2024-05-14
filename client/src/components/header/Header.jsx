@@ -13,9 +13,12 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
+import { Link } from 'react-router-dom';
 
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+const pages = ['Ready Workouts'];
+const settings = ['Login', 'Register'];
+
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -38,14 +41,14 @@ function Header() {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl" sx={{backgroundColor: 'primary.main', }}>
+      <Container maxWidth="xl" sx={{ backgroundColor: 'primary.main', }}>
         <Toolbar disableGutters>
-          <Fitnesscenter sx={{ display: { xs: 'none', md: 'flex' }, mr: 1}} />
+          <Fitnesscenter sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -85,7 +88,7 @@ function Header() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' }, 
+                display: { xs: 'block', md: 'none' },
               }}
             >
               {pages.map((page) => (
@@ -119,6 +122,8 @@ function Header() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
+                component={Link}
+                to={`/${page.toLowerCase()}`}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
@@ -129,7 +134,7 @@ function Header() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -148,11 +153,17 @@ function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
+
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem 
+                key={setting} 
+                onClick={handleCloseUserMenu} 
+                component={Link}
+                to={`/${setting.toLowerCase()}`}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+
             </Menu>
           </Box>
         </Toolbar>
