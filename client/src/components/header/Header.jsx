@@ -16,7 +16,7 @@ import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
 import { Link } from 'react-router-dom';
 
 
-const pages = ['Ready Workouts'];
+const pages = ['Ready Workouts', 'Recent Workouts', 'Create Workout'];
 const settings = ['Login', 'Register'];
 
 

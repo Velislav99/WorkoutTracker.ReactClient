@@ -1,47 +1,116 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import RestoreIcon from '@mui/icons-material/Restore';
-import AddIcon from '@mui/icons-material/Add';
+// Footer.js
+import React from 'react';
+import { Box, Container, Grid, Typography } from '@mui/material';
+import { Link } from 'react-router-dom'
 
-const styles = {
-    container: {
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        width: '100%',
-        display: 'flex',
-        justifyContent: 'center',
-        zIndex: 1000, // Adjust the z-index if necessary
-    },
-    footer: {
-        width: '100%', // Adjust the width of the footer as needed
-        height: 80, // Adjust the height of the footer as needed
-    },
-    icon: {
-        fontSize: 60, // Adjust the size of the icons as needed
-    },
+const Footer = () => {
+  return (
+    <Box
+      component="footer"
+      sx={{
+        py: 3,
+        px: 2,
+        mt: 'auto',
+        backgroundColor: (theme) =>
+          theme.palette.mode === 'light'
+            ? theme.palette.grey[200]
+            : theme.palette.grey[800],
+      }}
+    >
+      <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" gutterBottom>
+              Company
+            </Typography>
+            <ul>
+              <li>
+                <Link to="/aboutus" variant="body2">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" variant="body2">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link to="/career" variant="body2">
+                  Careers
+                </Link>
+              </li>
+            </ul>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" gutterBottom>
+              Resources
+            </Typography>
+            <ul>
+              <li>
+                <Link to="/blog">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link to="/documentation" variant="body2">
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <Link to="/tutorials" variant="body2">
+                  Tutorials
+                </Link>
+              </li>
+            </ul>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" gutterBottom>
+              Legal
+            </Typography>
+            <ul>
+              <li>
+                <Link to="/privacy" variant="body2">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link to="/tos" variant="body2">
+                  Terms of Service
+                </Link>
+              </li>
+            </ul>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <Typography variant="h6" gutterBottom>
+              Follow Us
+            </Typography>
+            <ul>
+              <li>
+                <Link to="#" variant="body2">
+                  Twitter
+                </Link>
+              </li>
+              <li>
+                <Link to="#" variant="body2">
+                  Facebook
+                </Link>
+              </li>
+              <li>
+                <Link to="#" variant="body2">
+                  Instagram
+                </Link>
+              </li>
+            </ul>
+          </Grid>
+        </Grid>
+        <Box mt={5} textAlign="center">
+          <Typography variant="body2" color="textSecondary">
+            © {new Date().getFullYear()} Your Company Name. All rights reserved.
+          </Typography>
+        </Box>
+      </Container>
+    </Box>
+  );
 };
 
-export default function Footer() {
-    const [value, setValue] = React.useState(0);
-
-    return (
-        <div style={styles.container}>
-            <Box sx={{ width: '100%', height: '100%' }}>
-                <BottomNavigation
-                    sx={styles.footer}
-                    showLabels
-                    value={value}
-                    onChange={(event, newValue) => {
-                        setValue(newValue);
-                    }}
-                >
-                    <BottomNavigationAction label="Recents" icon={<RestoreIcon sx={styles.icon} />} />
-                    <BottomNavigationAction label="Create" icon={<AddIcon sx={styles.icon} />} />
-                </BottomNavigation>
-            </Box>
-        </div>
-    );
-}
+export default Footer;
