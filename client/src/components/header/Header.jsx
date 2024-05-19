@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 
 const pages = ['Ready Workouts', 'Recent Workouts', 'Create Workout'];
@@ -47,7 +47,7 @@ function Header() {
           <Typography
             variant="h6"
             noWrap
-            component={Link}
+            component={NavLink}
             to="/"
             sx={{
               mr: 2,
@@ -92,7 +92,7 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={handleCloseNavMenu} >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -102,7 +102,7 @@ function Header() {
           <Typography
             variant="h5"
             noWrap
-            component={Link}
+            component={NavLink}
             to={'/'}
             sx={{
               mr: 2,
@@ -122,7 +122,7 @@ function Header() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                component={Link}
+                component={NavLink}
                 to={`/${page.toLowerCase()}`}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
@@ -158,7 +158,7 @@ function Header() {
                 <MenuItem 
                 key={setting} 
                 onClick={handleCloseUserMenu} 
-                component={Link}
+                component={NavLink}
                 to={`/${setting.toLowerCase()}`}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>

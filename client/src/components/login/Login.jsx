@@ -4,16 +4,37 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { baseUrl } from '../../shared';
+import { Link } from '@mui/material';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log('Email:', email);
-    console.log('Password:', password);
+    const url = baseUrl + 'login';
+    fetch(url, {
+
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+      .then(response => {
+        return response.json();
+      })
+      .then((data) => {
+        localStorage.setItem('access', data.access);
+        localStorage.setItem('refresh', data.refresh);
+        console.log(data);
+      });
+
+    
   };
 
   return (
@@ -50,6 +71,14 @@ const LoginForm = () => {
           <Button variant="contained" type="submit" fullWidth sx={{ mt: 2 }}>
             Login
           </Button>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            <Link href="/forgot-password">Forgot password?</Link>
+          </Typography>
+        
+          <Typography variant="body2" sx={{ mt: 2, color: 'primary.main' }}>
+            <Link href="/register">Not registered?</Link>
+          </Typography>
+          
         </form>
       </Paper>
     </Box>
