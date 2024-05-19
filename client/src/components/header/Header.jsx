@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 const pages = ['Ready Workouts', 'Recent Workouts', 'Create Workout'];
@@ -23,12 +23,14 @@ const settings = ['Login', 'Register'];
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+ 
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
+    
   };
 
   const handleCloseNavMenu = () => {
@@ -47,7 +49,7 @@ function Header() {
           <Typography
             variant="h6"
             noWrap
-            component={NavLink}
+            component={Link}
             to="/"
             sx={{
               mr: 2,
@@ -102,7 +104,7 @@ function Header() {
           <Typography
             variant="h5"
             noWrap
-            component={NavLink}
+            component={Link}
             to={'/'}
             sx={{
               mr: 2,
@@ -122,12 +124,14 @@ function Header() {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                component={NavLink}
+                component={Link}
                 to={`/${page.toLowerCase()}`}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
+                
               </Button>
+              
             ))}
           </Box>
 
@@ -158,7 +162,7 @@ function Header() {
                 <MenuItem 
                 key={setting} 
                 onClick={handleCloseUserMenu} 
-                component={NavLink}
+                component={Link}
                 to={`/${setting.toLowerCase()}`}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
@@ -166,7 +170,9 @@ function Header() {
 
             </Menu>
           </Box>
+          
         </Toolbar>
+        
       </Container>
     </AppBar>
   );
