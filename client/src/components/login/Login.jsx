@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext} from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -38,14 +38,14 @@ const LoginForm = () => {
       .then((data) => {
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
-        
+
         console.log(localStorage.accessToken);
       });
-      navigate('/');
-      setLoggedIn(true);
-    
+    navigate('/');
+    setLoggedIn(true);
+
   };
-  
+
 
   return (
     <Box
@@ -62,6 +62,7 @@ const LoginForm = () => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
+           
             label="Email"
             variant="outlined"
             fullWidth
@@ -70,6 +71,7 @@ const LoginForm = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
+            
             label="Password"
             variant="outlined"
             fullWidth
@@ -84,11 +86,11 @@ const LoginForm = () => {
           <Typography variant="body2" sx={{ mt: 2 }}>
             <Link href="/forgot-password">Forgot password?</Link>
           </Typography>
-        
+
           <Typography variant="body2" sx={{ mt: 2, color: 'primary.main' }}>
             <Link href="/register">Not registered?</Link>
           </Typography>
-          
+
         </form>
       </Paper>
     </Box>

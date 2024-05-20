@@ -18,7 +18,8 @@ import { LoginContext } from '../../App';
 
 
 const pages = ['Ready Workouts', 'Recent Workouts', 'Create Workout'];
-const settings = ['Login', 'Register'];
+const loggedOutSettings = ['Login', 'Register'];
+const loggedInSettings = ['Logout'];
 
 
 function Header() {
@@ -138,7 +139,7 @@ function Header() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Open loggedOutSettings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=" />
               </IconButton>
@@ -160,14 +161,16 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {loggedIn ? (
+                loggedInSettings.map((setting) => 
                 <MenuItem
                   onClick={() => { handleCloseUserMenu; setLoggedIn(false); }}
                   component={Link}
                   to={`/`}>
-                  <Typography textAlign="center">Logout</Typography>
+                  <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
+                )
               ) : (
-                settings.map((setting) =>
+                loggedOutSettings.map((setting) =>
                 <MenuItem
                   key={setting}
                   onClick={handleCloseUserMenu}
