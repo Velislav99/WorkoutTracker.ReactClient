@@ -14,6 +14,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
 import { Link } from 'react-router-dom';
+import { LoginContext } from '../../App';
 
 
 const pages = ['Ready Workouts', 'Recent Workouts', 'Create Workout'];
@@ -23,14 +24,14 @@ const settings = ['Login', 'Register'];
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
- 
+  const [loggedIn, setLoggedIn] = React.useContext(LoginContext);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-    
+
   };
 
   const handleCloseNavMenu = () => {
@@ -94,7 +95,8 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu} >
+                <MenuItem key={page} onClick={handleCloseNavMenu} component={Link}
+                  to={`/${page.toLowerCase()}`} >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -129,9 +131,9 @@ function Header() {
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
-                
+
               </Button>
-              
+
             ))}
           </Box>
 
@@ -157,22 +159,31 @@ function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-
-              {settings.map((setting) => (
-                <MenuItem 
-                key={setting} 
-                onClick={handleCloseUserMenu} 
-                component={Link}
-                to={`/${setting.toLowerCase()}`}>
+              {loggedIn ? (
+                <MenuItem
+                  onClick={() => { handleCloseUserMenu; setLoggedIn(false); }}
+                  component={Link}
+                  to={`/`}>
+                  <Typography textAlign="center">Logout</Typography>
+                </MenuItem>
+              ) : (
+                settings.map((setting) =>
+                <MenuItem
+                  key={setting}
+                  onClick={handleCloseUserMenu}
+                  component={Link}
+                  to={`/${setting.toLowerCase()}`}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
+
+
               ))}
 
             </Menu>
           </Box>
-          
+
         </Toolbar>
-        
+
       </Container>
     </AppBar>
   );

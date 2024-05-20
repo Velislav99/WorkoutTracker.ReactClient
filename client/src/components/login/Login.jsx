@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useContext} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -6,8 +6,15 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { baseUrl } from '../../shared';
 import { Link } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../App';
+
+
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+  const [loggedIn, setLoggedIn] = useContext(LoginContext);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -29,13 +36,16 @@ const LoginForm = () => {
         return response.json();
       })
       .then((data) => {
-        localStorage.setItem('access', data.access);
-        localStorage.setItem('refresh', data.refresh);
-        console.log(data);
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        
+        console.log(localStorage.accessToken);
       });
-
+      navigate('/');
+      setLoggedIn(true);
     
   };
+  
 
   return (
     <Box
