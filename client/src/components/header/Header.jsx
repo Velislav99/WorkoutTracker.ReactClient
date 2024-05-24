@@ -161,26 +161,28 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {loggedIn ? (
-                loggedInSettings.map((setting) => 
-                <MenuItem
-                  onClick={() => { handleCloseUserMenu; setLoggedIn(false); }}
-                  component={Link}
-                  to={`/`}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                loggedInSettings.map((setting) =>
+                  <MenuItem
+                    key={setting}
+                    onClick={() => { handleCloseUserMenu; setLoggedIn(false); }}
+                    component={Link}
+                    to={`/`}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
                 )
               ) : (
                 loggedOutSettings.map((setting) =>
-                <MenuItem
-                  key={setting}
-                  onClick={handleCloseUserMenu}
-                  component={Link}
-                  to={`/${setting.toLowerCase()}`}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+                  
+                  <MenuItem
+                    key={setting}
+                    onClick={handleCloseUserMenu}
+                    component={Link}
+                    to={`/${setting.toLowerCase()}`}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
 
 
-              ))}
+                ))}
 
             </Menu>
           </Box>

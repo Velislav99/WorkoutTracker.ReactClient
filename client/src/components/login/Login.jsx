@@ -39,10 +39,18 @@ const LoginForm = () => {
         localStorage.setItem('accessToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
 
+        if (data.accessToken) {
+          setLoggedIn(true);
+        }
+
         console.log(localStorage.accessToken);
-      });
-    navigate('/');
-    setLoggedIn(true);
+        navigate('/');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        setLoggedIn(false)
+      })
+      
 
   };
 
