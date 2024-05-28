@@ -1,26 +1,13 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import { AppBar, CssBaseline, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
 import { Link } from 'react-router-dom';
 import { LoginContext } from '../../App';
 
-
-const pages = ['Ready Workouts', 'Recent Workouts', 'Create Workout'];
+const pages = ['Ready Workouts', 'Start Workout'];
 const loggedOutSettings = ['Login', 'Register'];
-const loggedInSettings = ['Logout'];
-
+const loggedInSettings = ['Profile', 'History', 'Logout'];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -30,9 +17,9 @@ function Header() {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
-
   };
 
   const handleCloseNavMenu = () => {
@@ -43,9 +30,14 @@ function Header() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    setLoggedIn(false);
+    handleCloseUserMenu();
+  };
+
   return (
     <AppBar position="static">
-      <Container maxWidth="xl" sx={{ backgroundColor: 'primary.main', }}>
+      <Container maxWidth="xl" sx={{ backgroundColor: 'primary.main' }}>
         <Toolbar disableGutters>
           <Fitnesscenter sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
@@ -96,8 +88,7 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu} component={Link}
-                  to={`/${page.toLowerCase()}`} >
+                <MenuItem key={page} onClick={handleCloseNavMenu} component={Link} to={`/${page.toLowerCase()}`}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -108,7 +99,7 @@ function Header() {
             variant="h5"
             noWrap
             component={Link}
-            to={'/'}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -132,14 +123,12 @@ function Header() {
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
-
               </Button>
-
             ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open loggedOutSettings">
+            <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=" />
               </IconButton>
@@ -162,35 +151,44 @@ function Header() {
             >
               {loggedIn ? (
                 loggedInSettings.map((setting) =>
-                  <MenuItem
-                    key={setting}
-                    onClick={() => { handleCloseUserMenu; setLoggedIn(false); }}
-                    component={Link}
-                    to={`/`}>
-                    <Typography textAlign="center">{setting}</Typography>
-                  </MenuItem>
+                  setting === 'Logout' ? (
+                    <MenuItem
+                      key={setting}
+                      onClick={handleLogout}
+                      component={Link}
+                      to="/"
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      key={setting}
+                      onClick={handleCloseUserMenu}
+                      component={Link}
+                      to={`/${setting.toLowerCase()}`}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  )
                 )
               ) : (
-                loggedOutSettings.map((setting) =>
-                  
+                loggedOutSettings.map((setting) => (
                   <MenuItem
                     key={setting}
                     onClick={handleCloseUserMenu}
                     component={Link}
-                    to={`/${setting.toLowerCase()}`}>
+                    to={`/${setting.toLowerCase()}`}
+                  >
                     <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
-
-
-                ))}
-
+                ))
+              )}
             </Menu>
           </Box>
-
         </Toolbar>
-
       </Container>
     </AppBar>
   );
 }
+
 export default Header;

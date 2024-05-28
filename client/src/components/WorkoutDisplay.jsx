@@ -1,17 +1,17 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 
-const WorkoutDisplay = ({ workouts }) => {
-    if (!workouts || workouts.length === 0) return null;
+const WorkoutDisplay = ({ exersices }) => {
+    if (!exersices || exersices.length === 0) return null;
 
     return (
         <div>
-            {workouts.map((workout, index) => (
+            {exersices.map((exersice, index) => (
                 <Box key={index} sx={{ outline: "1px solid black", padding: "1rem", width: "100%", margin: "1rem auto" }}>
                     <Typography variant="h1" sx={{ fontSize: "2rem" }}>
-                        {workout.selectedWorkout.name}
+                        {exersice.selectedExersice.name}
                     </Typography>
-                    {workout.parameters.map((param, paramIndex) => (
+                    {exersice.parameters.map((param, paramIndex) => (
                         <Typography key={paramIndex}>
                             {param.name} : {param.value}
                         </Typography>

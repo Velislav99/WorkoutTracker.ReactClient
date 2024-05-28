@@ -1,4 +1,4 @@
-import { Container } from '@mui/material'
+import { Box,} from '@mui/material'
 import { Routes, Route, BrowserRouter, } from 'react-router-dom';
 import { createContext, useState } from 'react';
 
@@ -24,7 +24,12 @@ function App() {
   return (
     <LoginContext.Provider value={[loggedIn, changeLoggedIn]}>
       <BrowserRouter>
-        <Container>
+      
+      <Box sx={{ width: {
+              xs: '100%', 
+              lg: '70%',  
+            }, margin: '0 auto' }}>
+        
           <Header />
 
           <Routes>
@@ -32,11 +37,11 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/create workout" element={<CreateWorkout />} />
+            <Route path="/start workout" element={<CreateWorkout />} />
           </Routes>
 
           <Footer />
-        </Container>
+        </Box>
 
       </BrowserRouter>
     </LoginContext.Provider>

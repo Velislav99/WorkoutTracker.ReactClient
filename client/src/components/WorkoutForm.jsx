@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Box, Modal, TextField, IconButton, Autocomplete } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Button, Box, Modal, TextField, IconButton, Autocomplete, Typography } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import WorkoutDisplay from './WorkoutDisplay';
 
 const WorkoutForm = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const [workouts, setWorkouts] = useState([]);
-    const [selectedWorkout, setSelectedWorkout] = useState(null);
+    const [exersices, setExersices] = useState([]);
+    const [selectedExersice, setSelectedExersice] = useState(null);
     const [parameters, setParameters] = useState([]);
-    const [submittedWorkouts, setSubmittedWorkouts] = useState([]);
+    const [submittedExersices, setSubmittedExersices] = useState([]);
 
     const handleOpenModal = () => {
         setIsOpen(true);
@@ -21,13 +21,13 @@ const WorkoutForm = () => {
     };
 
     const resetForm = () => {
-        setSelectedWorkout(null);
+        setSelectedExersice(null);
         setParameters([]);
     };
 
     useEffect(() => {
-        // Replace with your API call to fetch workouts
-        setWorkouts([
+        // Replace with your API call to fetch exersices
+        setExersices([
             { id: 1, name: 'Push-ups' },
             { id: 2, name: 'Squats' },
             { id: 3, name: 'Deadlifts' },
@@ -51,7 +51,7 @@ const WorkoutForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setSubmittedWorkouts([...submittedWorkouts, { selectedWorkout, parameters }]);
+        setSubmittedExersices([...submittedExersices, { selectedExersice, parameters }]);
         handleCloseModal();
     };
 
@@ -73,26 +73,26 @@ const WorkoutForm = () => {
                     maxWidth: 600,
                     minWidth: 300,
                 }}>
-                    <h2>Create Workout</h2>
+                    <Typography variant='h5'>Add Exercise</Typography>
                     <form onSubmit={handleSubmit}>
-                        <div className="workout-select">
+                        <div className="exersice-select">
                             <Autocomplete
-                                options={workouts}
+                                options={exersices}
                                 getOptionLabel={(option) => option.name}
-                                onChange={(event, newValue) => setSelectedWorkout(newValue)}
+                                onChange={(event, newValue) => setSelectedExersice(newValue)}
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
-                                        label="Select Workout"
+                                        label="Exercise name"
                                         variant="outlined"
                                         fullWidth
                                     />
                                 )}
-                                value={selectedWorkout}
+                                value={selectedExersice}
                             />
                         </div>
-                        <div className="workout-parameters">
-                            <h3>Parameters</h3>
+                        <div className="exersice-parameters">
+                            <Typography variant='h6'>Parameters</Typography>
                             {parameters.map((parameter, index) => (
                                 <div key={index} className="parameter-row" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
                                     <TextField
@@ -117,12 +117,12 @@ const WorkoutForm = () => {
                             </IconButton>
                         </div>
                         <Button type="submit" variant="contained" color="primary">
-                            Create Workout
+                            Add Exercise
                         </Button>
                     </form>
                 </Box>
             </Modal>
-            <WorkoutDisplay workouts={submittedWorkouts} />
+            <WorkoutDisplay exersices={submittedExersices} />
         </div>
     );
 };
