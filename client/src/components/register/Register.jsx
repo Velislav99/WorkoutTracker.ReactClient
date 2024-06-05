@@ -36,7 +36,7 @@ const Register = () => {
             throw new Error(data.message || 'Registration failed');
           });
         }
-        return response.json();
+    
       })
       .then((data) => {
         console.log(data);

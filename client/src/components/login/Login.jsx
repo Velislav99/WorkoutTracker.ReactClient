@@ -1,17 +1,18 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, } from 'react';
 import { TextField, Button, Box, Paper, Typography, Link } from '@mui/material';
-
 import { useNavigate } from 'react-router-dom';
-import { LoginContext } from '../../App';
+
 import { baseUrl } from '../../shared';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const [loggedIn, setLoggedIn] = useContext(LoginContext);
+  
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const { dispatch } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,8 +32,10 @@ const LoginForm = () => {
       }
 
       const data = await response.json();
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('refreshToken', data.refreshToken);
+      // Convert the data object to a JSON string before storing it in localStorage
+      localStorage.setItem('user', JSON.stringify(data));
+
+      dispatch({ type: 'LOGIN', payload: data });
 
       if (data.accessToken) {
         setLoggedIn(true);

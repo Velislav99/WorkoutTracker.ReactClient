@@ -1,53 +1,56 @@
-import { Box,} from '@mui/material'
-import { Routes, Route, BrowserRouter, } from 'react-router-dom';
+import React from 'react';
+import { Box } from '@mui/material';
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
+import { useAuthContext } from './hooks/useAuthContext';
 import { createContext, useState } from 'react';
 
-import Header from './components/header/Header'
-import Footer from './components/footer/Footer'
-import Home from './components/home/Home'
-import Login from './components/login/Login'
-import Register from './components/register/Register'
-import CreateWorkout from './components/createWorkout/CreateWorkout';
+import Header from './components/header/Header';
+import Footer from './components/footer/Footer';
+import Home from './components/home/Home';
+import Login from './components/login/Login';
+import Register from './components/register/Register';
+import StartWorkout from './components/startWorkout/StartWorkout';
+
+import './global.css'; // Import the global CSS
 
 export const LoginContext = createContext();
 
 function App() {
+  const { user } = useAuthContext();
+  
+  
 
-  const [loggedIn, setLoggedIn] = useState(localStorage.accessToken ? true : false);
-
-  function changeLoggedIn(value) {
-    setLoggedIn(value);
-    if(value === false) {
-      localStorage.clear();
-    }
-  }
   return (
-    <LoginContext.Provider value={[loggedIn, changeLoggedIn]}>
+    
       <BrowserRouter>
-      
-      <Box sx={{ width: {
-              xs: '100%', 
-              lg: '70%',  
-            }, margin: '0 auto' }}>
-        
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
+            width: '100%',
+          }}
+        >
           <Header />
-
-          <Routes>
-
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/start workout" element={<CreateWorkout />} />
-          </Routes>
-
+          <Box
+            component="main"
+            sx={{
+              flex: '1 0 auto',
+              width: '100%',
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+              <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+              <Route path="/start workout" element={user ? <StartWorkout /> : <Navigate to="/login" />} />
+            </Routes>
+          </Box>
           <Footer />
         </Box>
-
       </BrowserRouter>
-    </LoginContext.Provider>
-
-
-  )
+    
+  );
 }
 
-export default App
+export default App;

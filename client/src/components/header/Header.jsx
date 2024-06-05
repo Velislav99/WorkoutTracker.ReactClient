@@ -1,19 +1,21 @@
 import * as React from 'react';
-import { AppBar, CssBaseline, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, } from '@mui/material';
+import { AppBar, CssBaseline, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, keyframes, } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
 import { Link } from 'react-router-dom';
-import { LoginContext } from '../../App';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 const pages = ['Ready Workouts', 'Start Workout'];
 const loggedOutSettings = ['Login', 'Register'];
 const loggedInSettings = ['Profile', 'History', 'Logout'];
 
 function Header() {
+  const {dispatch} = useAuthContext();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [loggedIn, setLoggedIn] = React.useContext(LoginContext);
+  
 
+  const { user } = useAuthContext();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -31,9 +33,14 @@ function Header() {
   };
 
   const handleLogout = () => {
-    setLoggedIn(false);
+    localStorage.removeItem('user');
+
+    dispatch({ type: 'LOGOUT' });
+
     handleCloseUserMenu();
   };
+
+  
 
   return (
     <AppBar position="static">
@@ -149,7 +156,7 @@ function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {loggedIn ? (
+              {user ? (
                 loggedInSettings.map((setting) =>
                   setting === 'Logout' ? (
                     <MenuItem
