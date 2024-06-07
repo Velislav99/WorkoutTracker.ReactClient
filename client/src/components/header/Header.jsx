@@ -1,32 +1,31 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import CssBaseline from "@mui/material/CssBaseline";
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
+import { AppBar, CssBaseline, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
-
-const pages = ['Ready Workouts', 'Recent Workouts', 'Create Workout'];
-const settings = ['Login', 'Register'];
-
+const pages = ['Ready Workouts', 'Start Workout'];
+const loggedOutSettings = ['Login', 'Register'];
+const loggedInSettings = ['Profile', 'History', 'Logout'];
 
 function Header() {
+  const { dispatch } = useAuthContext();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const { user } = useAuthContext();
+  const location = useLocation();
+  const [activePage, setActivePage] = React.useState(location.pathname);
+
+  React.useEffect(() => {
+    setActivePage(location.pathname);
+  }, [location.pathname]);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -39,9 +38,15 @@ function Header() {
     setAnchorElUser(null);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    dispatch({ type: 'LOGOUT' });
+    handleCloseUserMenu();
+  };
+
   return (
     <AppBar position="static">
-      <Container maxWidth="xl" sx={{ backgroundColor: 'primary.main', }}>
+      <Container maxWidth="xl" sx={{ backgroundColor: 'primary.main' }}>
         <Toolbar disableGutters>
           <Fitnesscenter sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
@@ -92,7 +97,15 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  to={`/${page.toLowerCase().replace(' ', '-')}`}
+                  sx={{
+                    backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'primary.light' : 'inherit',
+                  }}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -103,7 +116,7 @@ function Header() {
             variant="h5"
             noWrap
             component={Link}
-            to={'/'}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -123,8 +136,13 @@ function Header() {
                 key={page}
                 onClick={handleCloseNavMenu}
                 component={Link}
-                to={`/${page.toLowerCase()}`}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                to={`/${page.toLowerCase().replace(' ', '-')}`}
+                sx={{
+                  my: 2,
+                  color: 'white',
+                  display: 'block',
+                  backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'primary.light' : 'inherit',
+                }}
               >
                 {page}
               </Button>
@@ -153,17 +171,40 @@ function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-
-              {settings.map((setting) => (
-                <MenuItem 
-                key={setting} 
-                onClick={handleCloseUserMenu} 
-                component={Link}
-                to={`/${setting.toLowerCase()}`}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-
+              {user ? (
+                loggedInSettings.map((setting) =>
+                  setting === 'Logout' ? (
+                    <MenuItem
+                      key={setting}
+                      onClick={handleLogout}
+                      component={Link}
+                      to="/"
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      key={setting}
+                      onClick={handleCloseUserMenu}
+                      component={Link}
+                      to={`/${setting.toLowerCase()}`}
+                    >
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  )
+                )
+              ) : (
+                loggedOutSettings.map((setting) => (
+                  <MenuItem
+                    key={setting}
+                    onClick={handleCloseUserMenu}
+                    component={Link}
+                    to={`/${setting.toLowerCase()}`}
+                  >
+                    <Typography textAlign="center">{setting}</Typography>
+                  </MenuItem>
+                ))
+              )}
             </Menu>
           </Box>
         </Toolbar>
@@ -171,4 +212,5 @@ function Header() {
     </AppBar>
   );
 }
+
 export default Header;

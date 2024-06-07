@@ -1,19 +1,50 @@
-import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import React, { useState, } from 'react';
+import { TextField, Button, Box, Paper, Typography, Link } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
+import { baseUrl } from '../../shared';
+import { useAuthContext } from '../../hooks/useAuthContext';
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { dispatch } = useAuthContext();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log('Email:', email);
-    console.log('Password:', password);
+
+    try {
+      const response = await fetch(`${baseUrl}login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+
+      const data = await response.json();
+      // Convert the data object to a JSON string before storing it in localStorage
+      localStorage.setItem('user', JSON.stringify(data));
+
+      dispatch({ type: 'LOGIN', payload: data });
+
+      if (data.accessToken) {
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setError('Invalid email or password');
+
+    }
   };
 
   return (
@@ -37,6 +68,8 @@ const LoginForm = () => {
             margin="normal"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            error={!!error}
+            helperText={error && 'Invalid email or password'}
           />
           <TextField
             label="Password"
@@ -46,10 +79,18 @@ const LoginForm = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            error={!!error}
+            helperText={error && 'Invalid email or password'}
           />
           <Button variant="contained" type="submit" fullWidth sx={{ mt: 2 }}>
             Login
           </Button>
+          <Typography variant="body2" sx={{ mt: 2 }}>
+            <Link href="/forgot-password">Forgot password?</Link>
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 2, color: 'primary.main' }}>
+            <Link href="/register">Not registered?</Link>
+          </Typography>
         </form>
       </Paper>
     </Box>

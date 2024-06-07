@@ -1,0 +1,1 @@
+export const baseUrl = 'https://cnc-workouttracker.azurewebsites.net/';
