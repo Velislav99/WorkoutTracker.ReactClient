@@ -7,7 +7,7 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  
+
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,13 +38,12 @@ const LoginForm = () => {
       dispatch({ type: 'LOGIN', payload: data });
 
       if (data.accessToken) {
-        setLoggedIn(true);
         navigate('/');
       }
     } catch (error) {
       console.error('Error:', error);
       setError('Invalid email or password');
-      setLoggedIn(false);
+
     }
   };
 

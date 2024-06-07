@@ -5,6 +5,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import WorkoutDisplay from './WorkoutDisplay';
 import { baseUrl } from '../../shared';
 import { useAuthContext } from '../../hooks/useAuthContext';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const WorkoutForm = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +18,8 @@ const WorkoutForm = () => {
     const [parameterNames, setParameterNames] = useState([]);
     const [submittedExercises, setSubmittedExercises] = useState([]);
     const {user} = useAuthContext();
+
+    const navigate = useNavigate();
 
     const handleOpenModal = () => {
         setIsOpen(true);
@@ -33,83 +36,73 @@ const WorkoutForm = () => {
     };
 
     useEffect(() => {
-        
-           
-
-        // Fetch exercises
-        fetch(`${baseUrl}api/Exercise/name`, {
-            headers: {
-                'Authorization': `Bearer ${user.accessToken}`
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                
+        const fetchExercises = async () => {
+            try {
+                const response = await fetch(`${baseUrl}api/Exercise/name`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.accessToken}`
+                    }
+                });
+                const data = await response.json();
                 setExercises(data);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching exercises:', error);
-            });
-
-        // Fetch parameter names
-        fetch(`${baseUrl}api/Exercise/parameter/name/all`, {
-            headers: {
-                'Authorization': `Bearer ${user.accessToken}`
             }
-        })
-            .then(response => response.json())
-            .then(data => {
-                
+        };
+
+        const fetchParameterNames = async () => {
+            try {
+                const response = await fetch(`${baseUrl}api/Exercise/parameter/name/all`, {
+                    headers: {
+                        'Authorization': `Bearer ${user.accessToken}`
+                    }
+                });
+                const data = await response.json();
                 setParameterNames(data);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error('Error fetching parameter names:', error);
-            });
-    }, []);
-
-    const handleStartWorkout = () => {
-        
-           
-
-        fetch(`${baseUrl}api/Workout/workout/start`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${user.accessToken}`,
-                'Content-Type': 'application/json'
             }
-        })
-            .then(response => response.json())
-            .then(data => {
-                
-                setWorkoutId(data.workoutId);
-                setWorkoutStarted(true);
-            })
-            .catch(error => {
-                console.error('Error starting workout:', error);
+        };
+
+        fetchExercises();
+        fetchParameterNames();
+    }, [user.accessToken]);
+
+    const handleStartWorkout = async () => {
+        try {
+            const response = await fetch(`${baseUrl}Start`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${user.accessToken}`,
+                    'Content-Type': 'application/json'
+                }
             });
+            const data = await response.json();
+            setWorkoutId(data.workoutId);
+            setWorkoutStarted(true);
+        } catch (error) {
+            console.error('Error starting workout:', error);
+        }
     };
 
-    const handleEndWorkout = () => {
-        
-           
-
-        fetch(`${baseUrl}api/Workout/workout/end?workoutId=${workoutId}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${user.accessToken}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ workoutId })
-        })
-            .then(data => {
-                
-                setWorkoutStarted(false);
-                setWorkoutId(null);
-                setEndWorkoutOpen(false);
-            })
-            .catch(error => {
-                console.error('Error ending workout:', error);
+    const handleEndWorkout = async () => {
+        try {
+            const response = await fetch(`${baseUrl}End?workoutId=${workoutId}`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${user.accessToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ workoutId })
             });
+            setWorkoutStarted(false);
+            setWorkoutId(null);
+            setEndWorkoutOpen(false);
+            resetForm();
+            navigate('/');
+        } catch (error) {
+            console.error('Error ending workout:', error);
+        }
     };
 
     const handleAddParameter = () => {
@@ -140,9 +133,6 @@ const WorkoutForm = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        
-           
-
         const exerciseData = {
             trainingSessionId: workoutId,
             exerciseNameId: selectedExercise.id,
@@ -163,8 +153,6 @@ const WorkoutForm = () => {
             });
 
             const data = await response.json();
-            
-
             setSubmittedExercises([...submittedExercises, { selectedExercise, parameters }]);
             handleCloseModal();
         } catch (error) {
@@ -322,3 +310,4 @@ const WorkoutForm = () => {
 };
 
 export default WorkoutForm;
+

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { AppBar, CssBaseline, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, keyframes, } from '@mui/material';
+import { AppBar, CssBaseline, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
 
 const pages = ['Ready Workouts', 'Start Workout'];
@@ -10,12 +10,18 @@ const loggedOutSettings = ['Login', 'Register'];
 const loggedInSettings = ['Profile', 'History', 'Logout'];
 
 function Header() {
-  const {dispatch} = useAuthContext();
+  const { dispatch } = useAuthContext();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  
 
   const { user } = useAuthContext();
+  const location = useLocation();
+  const [activePage, setActivePage] = React.useState(location.pathname);
+
+  React.useEffect(() => {
+    setActivePage(location.pathname);
+  }, [location.pathname]);
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -34,13 +40,9 @@ function Header() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-
     dispatch({ type: 'LOGOUT' });
-
     handleCloseUserMenu();
   };
-
-  
 
   return (
     <AppBar position="static">
@@ -95,7 +97,15 @@ function Header() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu} component={Link} to={`/${page.toLowerCase()}`}>
+                <MenuItem
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  component={Link}
+                  to={`/${page.toLowerCase().replace(' ', '-')}`}
+                  sx={{
+                    backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'primary.light' : 'inherit',
+                  }}
+                >
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -126,8 +136,13 @@ function Header() {
                 key={page}
                 onClick={handleCloseNavMenu}
                 component={Link}
-                to={`/${page.toLowerCase()}`}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                to={`/${page.toLowerCase().replace(' ', '-')}`}
+                sx={{
+                  my: 2,
+                  color: 'white',
+                  display: 'block',
+                  backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'primary.light' : 'inherit',
+                }}
               >
                 {page}
               </Button>
