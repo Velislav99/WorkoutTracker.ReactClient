@@ -1,76 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Box, Modal, TextField, IconButton, Autocomplete, Typography } from '@mui/material';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import { Button, Modal, Box, TextField, Typography } from '@mui/material';
 import WorkoutDisplay from './WorkoutDisplay';
+import StartWorkoutModal from './StartWorkoutModal';
+import EndWorkoutModal from './EndWorkoutModal';
+import ExerciseForm from './ExerciseForm';
 import { baseUrl } from '../../shared';
 import { useAuthContext } from '../../hooks/useAuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const WorkoutForm = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [workoutStarted, setWorkoutStarted] = useState(false);
     const [endWorkoutOpen, setEndWorkoutOpen] = useState(false);
+    const [startWorkoutOpen, setStartWorkoutOpen] = useState(false);
+    const [workoutName, setWorkoutName] = useState('');
     const [workoutId, setWorkoutId] = useState(null);
     const [exercises, setExercises] = useState([]);
-    const [selectedExercise, setSelectedExercise] = useState(null);
-    const [parameters, setParameters] = useState([]);
     const [parameterNames, setParameterNames] = useState([]);
     const [submittedExercises, setSubmittedExercises] = useState([]);
-    const {user} = useAuthContext();
-
+    const [workoutComment, setWorkoutComment] = useState('');
+    const { user } = useAuthContext();
     const navigate = useNavigate();
 
-    const handleOpenModal = () => {
-        setIsOpen(true);
+    const fetchExercises = async () => {
+        try {
+            const response = await fetch(`${baseUrl}api/Exercise/name`, {
+                headers: {
+                    'Authorization': `Bearer ${user.accessToken}`
+                }
+            });
+            const data = await response.json();
+            setExercises(data);
+        } catch (error) {
+            console.error('Error fetching exercises:', error);
+        }
     };
 
-    const handleCloseModal = () => {
-        setIsOpen(false);
-        resetForm();
-    };
-
-    const resetForm = () => {
-        setSelectedExercise(null);
-        setParameters([]);
+    const fetchParameterNames = async () => {
+        try {
+            const response = await fetch(`${baseUrl}api/Exercise/parameter/name/all`, {
+                headers: {
+                    'Authorization': `Bearer ${user.accessToken}`
+                }
+            });
+            const data = await response.json();
+            setParameterNames(data);
+        } catch (error) {
+            console.error('Error fetching parameter names:', error);
+        }
     };
 
     useEffect(() => {
-        const fetchExercises = async () => {
-            try {
-                const response = await fetch(`${baseUrl}api/Exercise/name`, {
-                    headers: {
-                        'Authorization': `Bearer ${user.accessToken}`
-                    }
-                });
-                const data = await response.json();
-                setExercises(data);
-            } catch (error) {
-                console.error('Error fetching exercises:', error);
-            }
-        };
-
-        const fetchParameterNames = async () => {
-            try {
-                const response = await fetch(`${baseUrl}api/Exercise/parameter/name/all`, {
-                    headers: {
-                        'Authorization': `Bearer ${user.accessToken}`
-                    }
-                });
-                const data = await response.json();
-                setParameterNames(data);
-            } catch (error) {
-                console.error('Error fetching parameter names:', error);
-            }
-        };
-
         fetchExercises();
         fetchParameterNames();
     }, [user.accessToken]);
 
-    const handleStartWorkout = async () => {
+    const handleStartWorkout = () => setStartWorkoutOpen(true);
+
+    const handleConfirmStartWorkout = async () => {
         try {
-            const response = await fetch(`${baseUrl}Start`, {
+            const response = await fetch(`${baseUrl}api/Workout/Start/${workoutName}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${user.accessToken}`,
@@ -80,6 +69,7 @@ const WorkoutForm = () => {
             const data = await response.json();
             setWorkoutId(data.workoutId);
             setWorkoutStarted(true);
+            setStartWorkoutOpen(false);
         } catch (error) {
             console.error('Error starting workout:', error);
         }
@@ -87,81 +77,36 @@ const WorkoutForm = () => {
 
     const handleEndWorkout = async () => {
         try {
-            const response = await fetch(`${baseUrl}End?workoutId=${workoutId}`, {
+            const response = await fetch(`${baseUrl}api/Workout/End?workoutId=${workoutId}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${user.accessToken}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ workoutId })
+                body: JSON.stringify(workoutComment)
             });
             setWorkoutStarted(false);
             setWorkoutId(null);
             setEndWorkoutOpen(false);
-            resetForm();
             navigate('/');
         } catch (error) {
             console.error('Error ending workout:', error);
         }
     };
 
-    const handleAddParameter = () => {
-        setParameters([...parameters, { name: '', value: '' }]);
-    };
-
-    const handleParameterNameChange = (index, event, newValue) => {
-        const newParameters = [...parameters];
-        newParameters[index].name = newValue ? newValue.value : '';
-        setParameters(newParameters);
-    };
-
-    const handleParameterValueChange = (index, event) => {
-        const newParameters = [...parameters];
-        newParameters[index].value = event.target.value;
-        setParameters(newParameters);
-    };
-
-    const handleRemoveParameter = (index) => {
-        const newParameters = parameters.filter((_, i) => i !== index);
-        setParameters(newParameters);
-    };
-
-    const handleExerciseChange = (event, newValue) => {
-        setSelectedExercise(newValue);
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-
-        const exerciseData = {
-            trainingSessionId: workoutId,
-            exerciseNameId: selectedExercise.id,
-            exerciseParameters: parameters.map(param => ({
-                nameId: parameterNames.find(p => p.value === param.name)?.id,
-                value: param.value
-            }))
-        };
-
-        try {
-            const response = await fetch(`${baseUrl}api/Exercise`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${user.accessToken}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(exerciseData)
-            });
-
-            const data = await response.json();
-            setSubmittedExercises([...submittedExercises, { selectedExercise, parameters }]);
-            handleCloseModal();
-        } catch (error) {
-            console.error('Error submitting exercise:', error);
-        }
-    };
-
     return (
         <div>
+            {workoutName && <Typography
+                variant="h4"
+                sx={{
+                    fontWeight: 'bold',
+                    color: '#333', // Adjust color as needed
+                    marginBottom: '1rem', // Add spacing at the bottom
+                }}
+            >
+                {workoutName}
+            </Typography>}
+
             {!workoutStarted && (
                 <Button
                     variant="contained"
@@ -178,7 +123,7 @@ const WorkoutForm = () => {
                         variant="contained"
                         color="primary"
                         sx={{ padding: '10px 25px', fontSize: '1.2rem' }}
-                        onClick={handleOpenModal}
+                        onClick={() => setIsOpen(true)}
                     >
                         Add Exercise
                     </Button>
@@ -195,119 +140,32 @@ const WorkoutForm = () => {
                     End Workout
                 </Button>
             )}
-            <Modal open={isOpen} onClose={handleCloseModal}>
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '40%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        lineHeight: 1.4,
-                        backgroundColor: '#f1f1f1',
-                        padding: '14px 28px',
-                        borderRadius: 3,
-                        maxWidth: 600,
-                        minWidth: 300,
-                    }}
-                >
-                    <Typography variant='h5'>Add Exercise</Typography>
-                    <form onSubmit={handleSubmit}>
-                        <div className="exercise-select">
-                            <Autocomplete
-                                options={exercises}
-                                getOptionLabel={(option) => option.value}
-                                onChange={handleExerciseChange}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Exercise name"
-                                        variant="outlined"
-                                        fullWidth
-                                    />
-                                )}
-                                value={selectedExercise}
-                                isOptionEqualToValue={(option, value) => option.id === value.id}
-                            />
-                        </div>
-                        <div className="exercise-parameters">
-                            <Typography variant='h6'>Parameters</Typography>
-                            {parameters.map((parameter, index) => (
-                                <div key={index} className="parameter-row" style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
-                                    <Autocomplete
-                                        sx={{ width: 200 }}
-                                        options={parameterNames}
-                                        getOptionLabel={(option) => option.value}
-                                        onChange={(event, newValue) => handleParameterNameChange(index, event, newValue)}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label="Parameter Name"
-                                                variant="outlined"
-                                                fullWidth
-                                            />
-                                        )}
-                                        value={parameterNames.find(param => param.value === parameter.name) || null}
-                                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                                    />
-                                    <TextField
-                                        label="Value"
-                                        name="value"
-                                        value={parameter.value}
-                                        onChange={(event) => handleParameterValueChange(index, event)}
-                                    />
-                                    <IconButton onClick={() => handleRemoveParameter(index)}>
-                                        <RemoveCircleOutlineIcon />
-                                    </IconButton>
-                                </div>
-                            ))}
-                            <IconButton onClick={handleAddParameter}>
-                                <AddCircleOutlineIcon />
-                            </IconButton>
-                        </div>
-                        <Button type="submit" variant="contained" color="primary">
-                            Add Exercise
-                        </Button>
-                    </form>
-                </Box>
-            </Modal>
-            <Modal open={endWorkoutOpen} onClose={() => setEndWorkoutOpen(false)}>
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '40%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        lineHeight: 1.4,
-                        backgroundColor: '#f1f1f1',
-                        padding: '14px 28px',
-                        borderRadius: 3,
-                        maxWidth: 600,
-                        minWidth: 300,
-                    }}
-                >
-                    <Typography variant='h5'>End Workout</Typography>
-                    <Typography>Are you sure you want to end the workout?</Typography>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={() => setEndWorkoutOpen(false)}
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={handleEndWorkout}
-                        >
-                            End Workout
-                        </Button>
-                    </Box>
-                </Box>
-            </Modal>
+            <StartWorkoutModal
+                open={startWorkoutOpen}
+                onClose={() => setStartWorkoutOpen(false)}
+                workoutName={workoutName}
+                setWorkoutName={setWorkoutName}
+                handleConfirmStartWorkout={handleConfirmStartWorkout}
+            />
+            <ExerciseForm
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                exercises={exercises}
+                parameterNames={parameterNames}
+                workoutId={workoutId}
+                user={user}
+                submittedExercises={submittedExercises}
+                setSubmittedExercises={setSubmittedExercises}
+            />
+            <EndWorkoutModal
+                open={endWorkoutOpen}
+                onClose={() => setEndWorkoutOpen(false)}
+                workoutComment={workoutComment}
+                setWorkoutComment={setWorkoutComment}
+                handleEndWorkout={handleEndWorkout}
+            />
         </div>
     );
 };
 
 export default WorkoutForm;
-
