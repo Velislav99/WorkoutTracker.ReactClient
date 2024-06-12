@@ -13,7 +13,7 @@ const StartWorkoutModal = ({ open, onClose, workoutName, setWorkoutName, handleC
                     lineHeight: 1.4,
                     backgroundColor: '#f1f1f1',
                     padding: '14px 28px',
-                    borderRadius: 3,
+                    borderRadius: 0,
                     maxWidth: 600,
                     minWidth: 300,
                 }}

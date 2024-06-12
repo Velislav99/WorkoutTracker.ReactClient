@@ -20,7 +20,7 @@ const WorkoutForm = () => {
     const [submittedExercises, setSubmittedExercises] = useState([]);
     const [workoutComment, setWorkoutComment] = useState('');
     const { user } = useAuthContext();
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     const fetchExercises = async () => {
         try {
@@ -88,7 +88,7 @@ const WorkoutForm = () => {
             setWorkoutStarted(false);
             setWorkoutId(null);
             setEndWorkoutOpen(false);
-            navigate('/');
+            //navigate('/');
         } catch (error) {
             console.error('Error ending workout:', error);
         }
@@ -107,16 +107,18 @@ const WorkoutForm = () => {
                 {workoutName}
             </Typography>}
 
-            {!workoutStarted && (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ padding: '10px 25px', fontSize: '1.2rem' }}
-                    onClick={handleStartWorkout}
-                >
-                    Start Workout
-                </Button>
-            )}
+            <div style={{ display: 'flex', justifyContent: 'center', marginRight:'2rem' }}>
+                {!workoutStarted && (
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ padding: '10px 25px', fontSize: '1.2rem', }}
+                        onClick={handleStartWorkout}
+                    >
+                        Start Workout
+                    </Button>
+                )}
+            </div>
             {workoutStarted && (
                 <>
                     <Button

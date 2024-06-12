@@ -139,9 +139,9 @@ function Header() {
                 to={`/${page.toLowerCase().replace(' ', '-')}`}
                 sx={{
                   my: 2,
-                  color: 'white',
+                  color: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'primary.main' : 'inherit',
                   display: 'block',
-                  backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'primary.light' : 'inherit',
+                  backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'white' : 'inherit',
                 }}
               >
                 {page}

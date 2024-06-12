@@ -60,7 +60,7 @@ export default function Home() {
                 <Typography variant="h5" gutterBottom>
                     - {author}
                 </Typography>
-                <Button variant='contained' LinkComponent={Link} to = '/start workout'>Strart your workout</Button>
+                <Button variant='contained' LinkComponent={Link} to = '/start-workout'>Strart your workout</Button>
 
             </Box>
         </Box>
