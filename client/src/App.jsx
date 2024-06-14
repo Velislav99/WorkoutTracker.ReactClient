@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Box } from '@mui/material';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { useAuthContext } from './hooks/useAuthContext';

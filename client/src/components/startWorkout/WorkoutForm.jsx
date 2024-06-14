@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Box, TextField, Typography } from '@mui/material';
+import { Button, Modal, Box, TextField, Typography, Container } from '@mui/material';
 import WorkoutDisplay from './WorkoutDisplay';
 import StartWorkoutModal from './StartWorkoutModal';
 import EndWorkoutModal from './EndWorkoutModal';
@@ -20,6 +20,8 @@ const WorkoutForm = () => {
     const [submittedExercises, setSubmittedExercises] = useState([]);
     const [workoutComment, setWorkoutComment] = useState('');
     const [workoutTime, setWorkoutTime] = useState(``);
+    const [buttonVisible, setButtonVisible] = useState(true);
+
     const { user } = useAuthContext();
 
     const navigate = useNavigate();
@@ -87,6 +89,8 @@ const WorkoutForm = () => {
 
     const handleStartWorkout = () => setStartWorkoutOpen(true);
 
+    const handleRestartWorkout = () => { navigate(0); };
+
     const handleConfirmStartWorkout = async () => {
         try {
             const response = await fetch(`${baseUrl}api/Workout/Start/${workoutName}`, {
@@ -119,11 +123,7 @@ const WorkoutForm = () => {
             setWorkoutStarted(false);
             setWorkoutId(null);
             setEndWorkoutOpen(false);
-            //navigate(0);
-            if (data?.minutes !== undefined && data.minutes !== 0 && data?.seconds !== undefined && data.seconds !== 0) {
-                return `That workout took ${data.minutes} minutes and ${data.seconds} seconds.`;
-            }
-
+            setButtonVisible(false);
 
             let timeParts = [];
 
@@ -140,13 +140,10 @@ const WorkoutForm = () => {
                 timeParts.push(`${data.seconds} seconds`);
             }
 
-
-            if (timeParts.length === 0) {
-                return 'No workout data available.';
-            }
-
             setWorkoutTime(`That workout took ${timeParts.join(', ')}.`)
-            console.log(workoutTime);
+            console.log(workoutTime)
+            console.log(data)
+
         } catch (error) {
             console.error('Error ending workout:', error);
         }
@@ -166,7 +163,7 @@ const WorkoutForm = () => {
             </Typography>}
 
             <div style={{ display: 'flex', justifyContent: 'center', marginRight: '2rem' }}>
-                {!workoutStarted && (
+                {!workoutStarted && buttonVisible && (
                     <Button
                         variant="contained"
                         color="primary"
@@ -176,30 +173,61 @@ const WorkoutForm = () => {
                         Start Workout
                     </Button>
                 )}
-            </div>
-            {workoutStarted && (
-                <>
+                {!buttonVisible && (
                     <Button
                         variant="contained"
                         color="primary"
-                        sx={{ padding: '10px 25px', fontSize: '1.2rem' }}
+                        sx={{ padding: '10px 25px', fontSize: '1.2rem', }}
+                        onClick={handleRestartWorkout}
+                    >
+                        Start a new Workout
+                    </Button>
+                )}
+            </div>
+            {workoutStarted && (
+                <Box sx={{
+                    position: 'fixed',  
+                    bottom: 0,         
+                    left: 0,            
+                    width: '100%',      
+                    backgroundColor: 'white',
+                    padding: '1rem',    
+                    display: 'flex',    
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    zIndex: 1000,       
+                }}
+                >
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            fontSize: '3.5rem',
+                            marginRight: '1rem',
+                            minWidth: '8vh',   
+                            height: '8vh',  
+                            
+                        }}
                         onClick={() => setIsOpen(true)}
                     >
-                        Add Exercise
+                        +
                     </Button>
-                </>
+
+
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        sx={{ fontSize: '2rem', marginRight: '1rem',
+                            minWidth: '40vh',   
+                            height: '8vh', }}
+                        onClick={() => setEndWorkoutOpen(true)}
+                    >
+                        End Workout
+                    </Button>
+                </Box>
+
             )}
             <WorkoutDisplay exercises={submittedExercises} />
-            {workoutStarted && (
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    sx={{ padding: '10px 25px', fontSize: '1.2rem', marginTop: '10px' }}
-                    onClick={() => setEndWorkoutOpen(true)}
-                >
-                    End Workout
-                </Button>
-            )}
             <StartWorkoutModal
                 open={startWorkoutOpen}
                 onClose={() => setStartWorkoutOpen(false)}
