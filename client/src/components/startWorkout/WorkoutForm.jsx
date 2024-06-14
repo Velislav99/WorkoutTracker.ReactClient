@@ -19,8 +19,10 @@ const WorkoutForm = () => {
     const [parameterNames, setParameterNames] = useState([]);
     const [submittedExercises, setSubmittedExercises] = useState([]);
     const [workoutComment, setWorkoutComment] = useState('');
+    const [workoutTime, setWorkoutTime] = useState(``);
     const { user } = useAuthContext();
-    //const navigate = useNavigate();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchIsActive() {
@@ -40,6 +42,7 @@ const WorkoutForm = () => {
                         selectedExercise: { value: exercise.name },
                         parameters: exercise.parameters
                     })));
+
                 }
             } catch (error) {
                 console.error('Error fetching active workout:', error);
@@ -112,10 +115,38 @@ const WorkoutForm = () => {
                 },
                 body: JSON.stringify(workoutComment)
             });
+            const data = await response.json();
             setWorkoutStarted(false);
             setWorkoutId(null);
             setEndWorkoutOpen(false);
-            //navigate('/');
+            //navigate(0);
+            if (data?.minutes !== undefined && data.minutes !== 0 && data?.seconds !== undefined && data.seconds !== 0) {
+                return `That workout took ${data.minutes} minutes and ${data.seconds} seconds.`;
+            }
+
+
+            let timeParts = [];
+
+            if (data?.days !== undefined && data.days !== 0) {
+                timeParts.push(`${data.days} days`);
+            }
+            if (data?.hours !== undefined && data.hours !== 0) {
+                timeParts.push(`${data.hours} hours`);
+            }
+            if (data?.minutes !== undefined && data.minutes !== 0) {
+                timeParts.push(`${data.minutes} minutes`);
+            }
+            if (data?.seconds !== undefined && data.seconds !== 0) {
+                timeParts.push(`${data.seconds} seconds`);
+            }
+
+
+            if (timeParts.length === 0) {
+                return 'No workout data available.';
+            }
+
+            setWorkoutTime(`That workout took ${timeParts.join(', ')}.`)
+            console.log(workoutTime);
         } catch (error) {
             console.error('Error ending workout:', error);
         }
@@ -127,8 +158,8 @@ const WorkoutForm = () => {
                 variant="h4"
                 sx={{
                     fontWeight: 'bold',
-                    color: '#333', // Adjust color as needed
-                    marginBottom: '1rem', // Add spacing at the bottom
+                    color: '#333',
+                    marginBottom: '1rem',
                 }}
             >
                 {workoutName}
@@ -193,6 +224,9 @@ const WorkoutForm = () => {
                 setWorkoutComment={setWorkoutComment}
                 handleEndWorkout={handleEndWorkout}
             />
+            <Typography variant="h6" sx={{ marginTop: '1rem' }}>
+                {workoutTime}
+            </Typography>
         </div>
     );
 };
