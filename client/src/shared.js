@@ -1,1 +1,1 @@
-export const baseUrl = 'http://localhost:5104/';
+export const baseUrl = 'https://cnc-workouttracker.azurewebsites.net/';
