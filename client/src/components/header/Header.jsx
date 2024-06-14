@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppBar, CssBaseline, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
 import { Link, useLocation } from 'react-router-dom';
@@ -139,9 +139,12 @@ function Header() {
                 to={`/${page.toLowerCase().replace(' ', '-')}`}
                 sx={{
                   my: 2,
-                  color: 'white',
+                  color: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'primary.main' : 'inherit',
                   display: 'block',
-                  backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'primary.light' : 'inherit',
+                  backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'white' : 'inherit',
+                  '&:hover': {
+                    backgroundColor: activePage === `/${page.toLowerCase().replace(' ', '-')}` ? 'white' : 'inherit',
+                  },
                 }}
               >
                 {page}
