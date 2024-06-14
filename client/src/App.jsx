@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { useAuthContext } from './hooks/useAuthContext';
-import { createContext, useState } from 'react';
+import { createContext } from 'react';
 
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Box, Typography, TextField, IconButton, Autocomplete, Button } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
@@ -6,6 +6,30 @@ import { baseUrl } from '../../shared';
 const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, user, submittedExercises, setSubmittedExercises }) => {
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [parameters, setParameters] = useState([]);
+
+    // useEffect(() => {
+    //     async function fetchIsActive() {
+    //         let response = await fetch(`${baseUrl}api/Workout/HasActive`, {
+    //             headers: {
+    //                 Authorization: `Bearer ${user.accessToken}`,
+    //             }
+    //         })
+    //         response = await response.json()
+            
+    //         console.log(response)
+    //         if (response.hasActiveWorkout) {
+    //             const exercise = response.workout.exercises[0].name
+    //             const parameter = response.workout.exercises[0].parameters
+    //             console.log(response.workout.exercises)
+    //             console.log(response.workout.exercises[0].name)
+    //             setSubmittedExercises([...submittedExercises, { exercise, parameter }])
+               
+    //         }
+    //     }
+
+    //     fetchIsActive()
+    // }, [])
+
 
     const handleAddParameter = () => {
         setParameters([...parameters, { name: '', value: '' }]);
@@ -139,7 +163,7 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
                         </IconButton>
                     </div>
                     <Button type="submit" variant="contained" color="primary">
-                        Add Exercise
+                        Add 
                     </Button>
                 </form>
             </Box>

@@ -22,6 +22,33 @@ const WorkoutForm = () => {
     const { user } = useAuthContext();
     //const navigate = useNavigate();
 
+    useEffect(() => {
+        async function fetchIsActive() {
+            try {
+                let response = await fetch(`${baseUrl}api/Workout/HasActive`, {
+                    headers: {
+                        Authorization: `Bearer ${user.accessToken}`,
+                    }
+                });
+                response = await response.json();
+                console.log(response);
+                if (response.hasActiveWorkout) {
+                    setWorkoutStarted(true);
+                    setWorkoutName(response.workout.name);
+                    setWorkoutId(response.workout.id);
+                    setSubmittedExercises(response.workout.exercises.map(exercise => ({
+                        selectedExercise: { value: exercise.name },
+                        parameters: exercise.parameters
+                    })));
+                }
+            } catch (error) {
+                console.error('Error fetching active workout:', error);
+            }
+        }
+
+        fetchIsActive();
+    }, [user.accessToken]);
+
     const fetchExercises = async () => {
         try {
             const response = await fetch(`${baseUrl}api/Exercise/name`, {
@@ -107,7 +134,7 @@ const WorkoutForm = () => {
                 {workoutName}
             </Typography>}
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginRight:'2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginRight: '2rem' }}>
                 {!workoutStarted && (
                     <Button
                         variant="contained"
