@@ -106,6 +106,8 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
                     borderRadius: 3,
                     maxWidth: 600,
                     minWidth: 300,
+                    maxHeight: '60vh',
+                    overflow: 'auto',
                 }}
             >
                 <Typography variant='h5'>Add Exercise</Typography>
