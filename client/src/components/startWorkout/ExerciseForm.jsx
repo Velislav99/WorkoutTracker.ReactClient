@@ -7,28 +7,7 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [parameters, setParameters] = useState([]);
 
-    // useEffect(() => {
-    //     async function fetchIsActive() {
-    //         let response = await fetch(`${baseUrl}api/Workout/HasActive`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${user.accessToken}`,
-    //             }
-    //         })
-    //         response = await response.json()
-            
-    //         console.log(response)
-    //         if (response.hasActiveWorkout) {
-    //             const exercise = response.workout.exercises[0].name
-    //             const parameter = response.workout.exercises[0].parameters
-    //             console.log(response.workout.exercises)
-    //             console.log(response.workout.exercises[0].name)
-    //             setSubmittedExercises([...submittedExercises, { exercise, parameter }])
-               
-    //         }
-    //     }
-
-    //     fetchIsActive()
-    // }, [])
+    
 
 
     const handleAddParameter = () => {

@@ -10,6 +10,7 @@ import Home from './components/home/Home';
 import Login from './components/login/Login';
 import Register from './components/register/Register';
 import StartWorkout from './components/startWorkout/StartWorkout';
+import MyWorkouts from './components/myWorkouts/MyWorkouts';
 
 import './global.css'; // Import the global CSS
 
@@ -39,11 +40,12 @@ function App() {
               width: '100%',
             }}
           >
-            <Routes>
+            <Routes> 
               <Route path="/" element={<Home />} />
               <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
               <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
               <Route path="/start-workout" element={user ? <StartWorkout /> : <Navigate to="/login" />} />
+              <Route path="/my-workouts" element={user ? <MyWorkouts /> : <Navigate to="/login" />} />
             </Routes>
           </Box>
           <Footer />
