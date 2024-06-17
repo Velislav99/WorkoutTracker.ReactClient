@@ -5,7 +5,7 @@ import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
 
-const pages = ['Ready Workouts', 'Start Workout'];
+const pages = ['My Workouts', 'Start Workout'];
 const loggedOutSettings = ['Login', 'Register'];
 const loggedInSettings = ['Profile', 'History', 'Logout'];
 
