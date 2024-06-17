@@ -7,8 +7,6 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [parameters, setParameters] = useState([]);
 
-    
-
 
     const handleAddParameter = () => {
         setParameters([...parameters, { name: '', value: '' }]);
@@ -64,7 +62,7 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
 
             const data = await response.json();
             setSubmittedExercises([...submittedExercises, { selectedExercise, parameters }]);
-            resetForm();  // Reset the form after successful submission
+            resetForm();  
             onClose();
         } catch (error) {
             console.error('Error submitting exercise:', error);
