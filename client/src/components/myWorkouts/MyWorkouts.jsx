@@ -17,6 +17,7 @@ import {
     Pagination,
     Paper
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const MyWorkouts = () => {
     const { user } = useAuthContext();
@@ -26,6 +27,7 @@ const MyWorkouts = () => {
     const [detailsLoading, setDetailsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const workoutsPerPage = 10;
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function fetchMyWorkouts() {
@@ -89,6 +91,10 @@ const MyWorkouts = () => {
     const indexOfFirstWorkout = indexOfLastWorkout - workoutsPerPage;
     const currentWorkouts = myWorkouts.slice(indexOfFirstWorkout, indexOfLastWorkout);
 
+    const handleNavigateToStartWorkout = () => {
+        navigate('/start-workout');
+    };
+
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
@@ -113,10 +119,29 @@ const MyWorkouts = () => {
                                 >
                                     <ListItemText
                                         primary={workout.name}
-                                        secondary={`${new Date(workout.started).toLocaleString()} - ${workout.isFinished ? 'Finished' : 'In Progress'}`}
-                                        primaryTypographyProps={{ variant: 'h5' }}  
-                                        secondaryTypographyProps={{ variant: 'body2' }}  
+                                        secondary={
+                                            <Typography variant="body2">
+                                                {`${new Date(workout.started).toLocaleString()} - `}
+                                                {workout.isFinished ? <span style={{ color: 'green', fontWeight: 'bold' }}>Finished</span>  : (
+                                                    <span style={{ color: 'red', fontWeight: 'bold' }}>In Progress</span>
+                                                )}
+                                            </Typography>
+                                        }
+                                        primaryTypographyProps={{ variant: 'h5' }}
+                                        secondaryTypographyProps={{ variant: 'body2' }}
                                     />
+                                    {!workout.isFinished && (
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevent the ListItem onClick from firing
+                                                handleNavigateToStartWorkout();
+                                            }}
+                                        >
+                                            Resume
+                                        </Button>
+                                    )}
                                 </ListItem>
                             ))
                         )}
@@ -145,11 +170,18 @@ const MyWorkouts = () => {
                             <Typography variant="body1">{`Comment: ${workoutDetails.comment}`}</Typography>
                             <Typography variant="body1">{`Started: ${new Date(workoutDetails.started).toLocaleString()}`}</Typography>
                             <Typography variant="body1">{`Duration: ${workoutDetails.duration.days} days, ${workoutDetails.duration.hours} hours, ${workoutDetails.duration.minutes} minutes, ${workoutDetails.duration.seconds} seconds`}</Typography>
-                            <Typography variant="body1">{`Status: ${workoutDetails.isFinished ? 'Finished' : 'In Progress'}`}</Typography>
+                            <Typography variant="body1">
+                                Status: {workoutDetails.isFinished ? 'Finished' : <span style={{ color: 'red', fontWeight: 'bold' }}>In Progress</span>}
+                            </Typography>
                             <Typography variant="h6">Exercises:</Typography>
                             <List>
                                 {workoutDetails.exercises.map(exercise => (
-                                    <ListItem key={exercise.id}>
+                                    <ListItem key={exercise.id} sx={{ 
+                                        outline: "1px solid black",
+                                        padding: "0.5rem",
+                                        width: "100%",
+                                        margin: "0.5rem 0",
+                                        boxShadow: "0 10px 20px rgba(200, 20, 200, 0.1)",}}>
                                         <ListItemText
                                             primary={exercise.name}
                                             secondary={exercise.parameters.map(param => `${param.name}: ${param.value}`).join(', ')}
