@@ -35,7 +35,7 @@ const WorkoutForm = () => {
                     }
                 });
                 response = await response.json();
-                console.log(response);
+               
                 if (response.hasActiveWorkout) {
                     setWorkoutStarted(true);
                     setWorkoutName(response.workout.name);
@@ -141,8 +141,7 @@ const WorkoutForm = () => {
             }
 
             setWorkoutTime(`That workout took ${timeParts.join(', ')}.`)
-            console.log(workoutTime)
-            console.log(data)
+            
 
         } catch (error) {
             console.error('Error ending workout:', error);
