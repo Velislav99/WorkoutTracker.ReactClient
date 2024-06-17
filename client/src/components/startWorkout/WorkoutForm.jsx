@@ -180,7 +180,7 @@ const WorkoutForm = () => {
                         sx={{ padding: '10px 25px', fontSize: '1.2rem', }}
                         onClick={handleRestartWorkout}
                     >
-                        Start a new Workout
+                        Go back to the home page
                     </Button>
                 )}
             </div>

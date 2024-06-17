@@ -13,16 +13,19 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
-    Button
+    Button,
+    Pagination,
+    Paper
 } from '@mui/material';
 
 const MyWorkouts = () => {
     const { user } = useAuthContext();
     const [myWorkouts, setMyWorkouts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [selectedWorkout, setSelectedWorkout] = useState(null);
     const [workoutDetails, setWorkoutDetails] = useState(null);
     const [detailsLoading, setDetailsLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const workoutsPerPage = 10;
 
     useEffect(() => {
         async function fetchMyWorkouts() {
@@ -38,7 +41,8 @@ const MyWorkouts = () => {
                 }
 
                 const data = await response.json();
-                setMyWorkouts(data);
+                const sortedData = data.sort((a, b) => new Date(b.started) - new Date(a.started));
+                setMyWorkouts(sortedData);
             } catch (error) {
                 console.error('Error fetching workouts:', error);
             } finally {
@@ -77,6 +81,14 @@ const MyWorkouts = () => {
         setWorkoutDetails(null);
     };
 
+    const handlePageChange = (event, value) => {
+        setCurrentPage(value);
+    };
+
+    const indexOfLastWorkout = currentPage * workoutsPerPage;
+    const indexOfFirstWorkout = indexOfLastWorkout - workoutsPerPage;
+    const currentWorkouts = myWorkouts.slice(indexOfFirstWorkout, indexOfLastWorkout);
+
     return (
         <Container>
             <Typography variant="h4" component="h1" gutterBottom>
@@ -87,25 +99,37 @@ const MyWorkouts = () => {
                     <CircularProgress />
                 </Box>
             ) : (
-                <List>
-                    {myWorkouts.length === 0 ? (
-                        <Typography variant="body1">No workouts found</Typography>
-                    ) : (
-                        myWorkouts.map(workout => (
-                            <ListItem
-                                key={workout.id}
-                                divider
-                                button
-                                onClick={() => handleWorkoutClick(workout.id)}
-                            >
-                                <ListItemText
-                                    primary={workout.name}
-                                    secondary={`${new Date(workout.started).toLocaleString()} - ${workout.isFinished ? 'Finished' : 'In Progress'}`}
-                                />
-                            </ListItem>
-                        ))
-                    )}
-                </List>
+                <Paper elevation={3}>
+                    <List>
+                        {myWorkouts.length === 0 ? (
+                            <Typography variant="body1" align="center" sx={{ padding: 2 }}>No workouts found</Typography>
+                        ) : (
+                            currentWorkouts.map(workout => (
+                                <ListItem
+                                    key={workout.id}
+                                    divider
+                                    button
+                                    onClick={() => handleWorkoutClick(workout.id)}
+                                >
+                                    <ListItemText
+                                        primary={workout.name}
+                                        secondary={`${new Date(workout.started).toLocaleString()} - ${workout.isFinished ? 'Finished' : 'In Progress'}`}
+                                        primaryTypographyProps={{ variant: 'h5' }}  
+                                        secondaryTypographyProps={{ variant: 'body2' }}  
+                                    />
+                                </ListItem>
+                            ))
+                        )}
+                    </List>
+                    <Box display="flex" justifyContent="center" alignItems="center" padding={2}>
+                        <Pagination
+                            count={Math.ceil(myWorkouts.length / workoutsPerPage)}
+                            page={currentPage}
+                            onChange={handlePageChange}
+                            color="primary"
+                        />
+                    </Box>
+                </Paper>
             )}
 
             <Dialog open={Boolean(workoutDetails)} onClose={handleClose}>
@@ -129,6 +153,8 @@ const MyWorkouts = () => {
                                         <ListItemText
                                             primary={exercise.name}
                                             secondary={exercise.parameters.map(param => `${param.name}: ${param.value}`).join(', ')}
+                                            primaryTypographyProps={{ variant: 'h6' }}
+                                            secondaryTypographyProps={{ variant: 'body1' }}
                                         />
                                     </ListItem>
                                 ))}

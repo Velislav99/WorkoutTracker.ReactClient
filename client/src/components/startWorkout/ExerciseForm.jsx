@@ -3,10 +3,11 @@ import { Modal, Box, Typography, TextField, IconButton, Autocomplete, Button } f
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { baseUrl } from '../../shared';
+
 const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, user, submittedExercises, setSubmittedExercises }) => {
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [parameters, setParameters] = useState([]);
-
+    const [formError, setFormError] = useState('');
 
     const handleAddParameter = () => {
         setParameters([...parameters, { name: '', value: '' }]);
@@ -36,10 +37,24 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
     const resetForm = () => {
         setSelectedExercise(null);
         setParameters([]);
+        setFormError('');
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Check if all parameter fields are filled
+        if (!selectedExercise) {
+            setFormError('Please select an exercise.');
+            return;
+        }
+
+        for (let param of parameters) {
+            if (!param.name || !param.value) {
+                setFormError('Please fill out all parameter fields.');
+                return;
+            }
+        }
 
         const exerciseData = {
             trainingSessionId: workoutId,
@@ -88,6 +103,7 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
                 }}
             >
                 <Typography variant='h5'>Add Exercise</Typography>
+                {formError && <Typography color="error">{formError}</Typography>}
                 <form onSubmit={handleSubmit}>
                     <div className="exercise-select">
                         <Autocomplete
@@ -131,6 +147,7 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
                                     name="value"
                                     value={parameter.value}
                                     onChange={(event) => handleParameterValueChange(index, event)}
+                                    required
                                 />
                                 <IconButton onClick={() => handleRemoveParameter(index)}>
                                     <RemoveCircleOutlineIcon />
