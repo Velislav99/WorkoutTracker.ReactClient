@@ -7,7 +7,7 @@ import { useAuthContext } from '../../hooks/useAuthContext';
 
 const pages = ['My Workouts', 'Start Workout'];
 const loggedOutSettings = ['Login', 'Register'];
-const loggedInSettings = ['Profile', 'History', 'Logout'];
+const loggedInSettings = ['Profile', 'Logout'];
 
 function Header() {
   const { dispatch } = useAuthContext();

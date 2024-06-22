@@ -43,7 +43,6 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, u
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        // Check if all parameter fields are filled
         if (!selectedExercise) {
             setFormError('Please select an exercise.');
             return;

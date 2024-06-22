@@ -1,8 +1,8 @@
+import CssBaseline from '@mui/material/CssBaseline'
 
 import { Box } from '@mui/material';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import { useAuthContext } from './hooks/useAuthContext';
-import { createContext } from 'react';
 
 import Header from './components/header/Header';
 import Footer from './components/footer/Footer';
@@ -12,46 +12,40 @@ import Register from './components/register/Register';
 import StartWorkout from './components/startWorkout/StartWorkout';
 import MyWorkouts from './components/myWorkouts/MyWorkouts';
 
-import './global.css'; // Import the global CSS
-
-export const LoginContext = createContext();
+import './global.css';
 
 function App() {
   const { user } = useAuthContext();
-  
-  
 
   return (
-    
-      <BrowserRouter>
+    <BrowserRouter>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+          width: '100%',
+        }}
+      >
+        <Header />
         <Box
+          component="main"
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: '100vh',
+            flex: '1 0 auto',
             width: '100%',
           }}
         >
-          <Header />
-          <Box
-            component="main"
-            sx={{
-              flex: '1 0 auto',
-              width: '100%',
-            }}
-          >
-            <Routes> 
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-              <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
-              <Route path="/start-workout" element={user ? <StartWorkout /> : <Navigate to="/login" />} />
-              <Route path="/my-workouts" element={user ? <MyWorkouts /> : <Navigate to="/login" />} />
-            </Routes>
-          </Box>
-          <Footer />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+            <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
+            <Route path="/start-workout" element={user ? <StartWorkout /> : <Navigate to="/login" />} />
+            <Route path="/my-workouts" element={user ? <MyWorkouts /> : <Navigate to="/login" />} />
+          </Routes>
         </Box>
-      </BrowserRouter>
-    
+        <Footer />
+      </Box>
+    </BrowserRouter>
   );
 }
 
