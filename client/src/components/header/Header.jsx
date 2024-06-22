@@ -2,7 +2,7 @@ import * as React from 'react';
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Fitnesscenter from '@mui/icons-material/Fitnesscenter';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../hooks/useAuthContext';
 
 const pages = ['My Workouts', 'Start Workout'];
@@ -13,7 +13,8 @@ function Header() {
   const { dispatch } = useAuthContext();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-
+ 
+  const navigate = useNavigate();
   const { user } = useAuthContext();
   const location = useLocation();
   const [activePage, setActivePage] = React.useState(location.pathname);
@@ -39,6 +40,7 @@ function Header() {
   };
 
   const handleLogout = () => {
+    navigate(0);
     localStorage.removeItem('user');
     dispatch({ type: 'LOGOUT' });
     handleCloseUserMenu();
