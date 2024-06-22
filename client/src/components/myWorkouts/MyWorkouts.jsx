@@ -18,6 +18,7 @@ import {
     Paper
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import MyStatistics from './MyStatistics';
 
 const MyWorkouts = () => {
     const { user } = useAuthContext();
@@ -100,6 +101,7 @@ const MyWorkouts = () => {
             <Typography variant="h4" component="h1" gutterBottom>
                 My Workouts
             </Typography>
+            <MyStatistics />
             {loading ? (
                 <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
                     <CircularProgress />
@@ -121,9 +123,9 @@ const MyWorkouts = () => {
                                         primary={workout.name}
                                         secondary={
                                             <Typography variant="body2">
-                                                {`${new Date(workout.started).toLocaleString()} - `}
-                                                {workout.isFinished ? <span style={{ color: 'green', fontWeight: 'bold' }}>Finished</span>  : (
-                                                    <span style={{ color: 'red', fontWeight: 'bold' }}>In Progress</span>
+                                                {`${new Date(workout.started).toLocaleString()} `}
+                                                {workout.isFinished ? <span ></span>  : (
+                                                    <span style={{ color: 'red', fontWeight: 'bold', }}>In Progress</span>
                                                 )}
                                             </Typography>
                                         }

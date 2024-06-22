@@ -33,7 +33,7 @@ const LoginForm = () => {
       localStorage.setItem('user', JSON.stringify(data));
       localStorage.setItem('accessToken', data.accessToken);
       localStorage.setItem('refreshToken', data.refreshToken);
-      localStorage.setItem('tokenExpiry', Date.now() + data.expiresIn * 1000);
+      localStorage.setItem('tokenExpiry', data.expiresIn );
 
       dispatch({ type: 'LOGIN', payload: data });
 
@@ -44,49 +44,6 @@ const LoginForm = () => {
       console.error('Error:', error);
       setError('Invalid email or password');
     }
-  };
-
-  const isTokenExpired = () => {
-    const expiryTime = localStorage.getItem('tokenExpiry');
-    return Date.now() > expiryTime;
-  };
-
-  const refreshAccessToken = async () => {
-    try {
-      const response = await fetch(`${baseUrl}refresh-token`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ refreshToken: localStorage.getItem('refreshToken') }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to refresh token');
-      }
-
-      const data = await response.json();
-
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('tokenExpiry', Date.now() + data.expiresIn * 1000);
-    } catch (error) {
-      console.error('Error refreshing token:', error);
-      // Handle logout if refreshing token fails
-    }
-  };
-
-  const makeApiRequest = async (url, options = {}) => {
-    if (isTokenExpired()) {
-      await refreshAccessToken();
-    }
-
-    const accessToken = localStorage.getItem('accessToken');
-    options.headers = {
-      ...options.headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
-
-    return fetch(url, options);
   };
 
   return (
