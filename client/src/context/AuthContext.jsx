@@ -52,7 +52,6 @@ export const AuthContextProvider = ({ children }) => {
           dispatch({ type: 'LOGIN', payload: { ...state.user, ...data } });
         } catch (error) {
           console.error('Error refreshing token:', error);
-          // Optionally handle logout here
         }
       }
     };

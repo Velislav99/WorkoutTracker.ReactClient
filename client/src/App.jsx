@@ -13,6 +13,7 @@ import StartWorkout from './components/startWorkout/StartWorkout';
 import MyWorkouts from './components/myWorkouts/MyWorkouts';
 
 import './global.css';
+import Profile from './components/profile/Profile';
 
 function App() {
   const { user } = useAuthContext();
@@ -34,13 +35,14 @@ function App() {
             flex: '1 0 auto',
             width: '100%',
           }}
-        >
+        > 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
             <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
             <Route path="/start-workout" element={user ? <StartWorkout /> : <Navigate to="/login" />} />
             <Route path="/my-workouts" element={user ? <MyWorkouts /> : <Navigate to="/login" />} />
+            <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />
           </Routes>
         </Box>
         <Footer />

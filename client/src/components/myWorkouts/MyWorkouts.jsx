@@ -179,7 +179,7 @@ const MyWorkouts = () => {
                             <List>
                                 {workoutDetails.exercises.map(exercise => (
                                     <ListItem key={exercise.id} sx={{ 
-                                        outline: "1px solid black",
+                                    
                                         padding: "0.5rem",
                                         width: "100%",
                                         margin: "0.5rem 0",

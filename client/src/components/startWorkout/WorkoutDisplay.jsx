@@ -11,7 +11,6 @@ const WorkoutDisplay = ({ exercises }) => {
                 <Box
                     key={index}
                     sx={{
-                        outline: "1px solid black",
                         padding: "1rem",
                         width: "80%",
                         margin: "1rem 0",

@@ -57,7 +57,7 @@ export default function Home() {
                     {quote}
                 </Typography>
 
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h5" gutterBottom fontFamily={'"Segoe UI"'}>
                     - {author}
                 </Typography>
                 <Button variant='contained' LinkComponent={Link} to = '/start-workout'>Start your workout</Button>

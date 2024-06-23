@@ -18,7 +18,7 @@ function Header() {
   const { user } = useAuthContext();
   const location = useLocation();
   const [activePage, setActivePage] = React.useState(location.pathname);
-
+ 
   React.useEffect(() => {
     setActivePage(location.pathname);
   }, [location.pathname]);
