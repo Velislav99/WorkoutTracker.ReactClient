@@ -1,13 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import WorkoutForm from './WorkoutForm';
 
-
-
 export default function StartWorkout() {
-
     return (
-
         <Box
             sx={{
                 display: 'flex',
@@ -15,9 +11,11 @@ export default function StartWorkout() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 padding: '1rem',
-                width: '100%',
                 height: '100vh',
-                backgroundColor: '#f0f0f0',
+                backgroundImage: 'url("https://img.freepik.com/premium-photo/background-with-weights-gym-gray-color_1040322-12882.jpg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
             }}
         >
             <Box

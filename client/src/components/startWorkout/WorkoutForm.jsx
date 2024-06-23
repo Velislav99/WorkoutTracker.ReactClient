@@ -35,7 +35,7 @@ const WorkoutForm = () => {
                     }
                 });
                 response = await response.json();
-               
+
                 if (response.hasActiveWorkout) {
                     setWorkoutStarted(true);
                     setWorkoutName(response.workout.name);
@@ -141,7 +141,7 @@ const WorkoutForm = () => {
             }
 
             setWorkoutTime(`That workout took ${timeParts.join(', ')}.`)
-            
+
 
         } catch (error) {
             console.error('Error ending workout:', error);
@@ -149,7 +149,7 @@ const WorkoutForm = () => {
     };
 
     return (
-        <div>
+        <Box>
             {workoutName && <Typography
                 variant="h4"
                 sx={{
@@ -185,16 +185,16 @@ const WorkoutForm = () => {
             </div>
             {workoutStarted && (
                 <Box sx={{
-                    position: 'fixed',  
-                    bottom: 0,         
-                    left: 0,            
-                    width: '100%',      
+                    position: 'fixed',
+                    bottom: 0,
+                    left: 0,
+                    width: '100%',
                     backgroundColor: 'white',
-                    padding: '1rem',    
-                    display: 'flex',    
-                    justifyContent: 'center', 
-                    alignItems: 'center', 
-                    zIndex: 1000,       
+                    padding: '1rem',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000,
                 }}
                 >
                     <Button
@@ -202,10 +202,10 @@ const WorkoutForm = () => {
                         color="primary"
                         sx={{
                             fontSize: '3.5rem',
-                            marginRight: '1rem',
-                            minWidth: '8vh',   
-                            height: '8vh',  
-                            
+                            margin: '1rem',
+                            minWidth: '8vh',
+                            height: '8vh',
+
                         }}
                         onClick={() => setIsOpen(true)}
                     >
@@ -216,9 +216,11 @@ const WorkoutForm = () => {
                     <Button
                         variant="contained"
                         color="secondary"
-                        sx={{ fontSize: '2rem', marginRight: '1rem',
-                            minWidth: '40vh',   
-                            height: '8vh', }}
+                        sx={{
+                            fontSize: '2rem',
+                            marginRight: '2rem',
+                            height: '8vh',
+                        }}
                         onClick={() => setEndWorkoutOpen(true)}
                     >
                         End Workout
@@ -254,7 +256,7 @@ const WorkoutForm = () => {
             <Typography variant="h6" sx={{ marginTop: '1rem' }}>
                 {workoutTime}
             </Typography>
-        </div>
+        </Box>
     );
 };
 

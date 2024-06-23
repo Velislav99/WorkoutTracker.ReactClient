@@ -12,8 +12,7 @@ const WorkoutDisplay = ({ exercises }) => {
                     key={index}
                     sx={{
                         padding: "1rem",
-                        width: "80%",
-                        margin: "1rem 0",
+                        margin: "1rem 1rem",
                         boxShadow: "0 10px 20px rgba(200, 20, 200, 0.1)",
                         animation: `${fadeIn} 0.6s ease-in-out`
                     }}
