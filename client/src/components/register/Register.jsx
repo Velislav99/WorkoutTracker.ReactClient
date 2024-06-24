@@ -5,6 +5,9 @@ import { baseUrl } from '../../shared';
 
 const passwordRequirements = 'Password must be at least 8 characters long,\n and include an uppercase letter,\n a lowercase letter, and a special character.';
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
+
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -16,11 +19,34 @@ const Register = () => {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+  const validateForm = () => {
+    let valid = true;
+    let emailError = '';
+    let passwordError = '';
+
+    if (!emailRegex.test(formData.email)) {
+      emailError = 'Invalid email address';
+      valid = false;
+    }
+
+    if (!passwordRegex.test(formData.password)) {
+      passwordError = passwordRequirements;
+      valid = false;
+    }
+
+    setErrors({ email: emailError, password: passwordError, general: '' });
+    return valid;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setErrors({ email: '', password: '', general: '' });
     setPasswordHelperText('');
+
+    if (!validateForm()) {
+      return;
+    }
 
     const url = `${baseUrl}register`;
     fetch(url, {
@@ -44,13 +70,7 @@ const Register = () => {
       })
       .catch((error) => {
         console.error('Error:', error);
-        if (error.message.includes('email')) {
-          setErrors((prevErrors) => ({ ...prevErrors, email: 'Invalid email address' }));
-        } else if (error.message.includes('password')) {
-          setErrors((prevErrors) => ({ ...prevErrors, password: 'Invalid password' }));
-        } else {
-          setErrors((prevErrors) => ({ ...prevErrors, general: 'Registration failed' }));
-        }
+        
       });
   };
 

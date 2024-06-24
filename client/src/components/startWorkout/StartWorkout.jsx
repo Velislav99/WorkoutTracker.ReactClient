@@ -12,7 +12,7 @@ export default function StartWorkout() {
                 justifyContent: 'center',
                 padding: '1rem',
                 height: '100vh',
-                backgroundImage: 'url("https://img.freepik.com/premium-photo/background-with-weights-gym-gray-color_1040322-12882.jpg")',
+                backgroundImage: 'url("https://as2.ftcdn.net/v2/jpg/08/09/48/25/1000_F_809482598_iFY3RUsAXrpaJAuFh2UijLuLhGMQYJDb.jpg")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',

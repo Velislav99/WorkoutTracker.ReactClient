@@ -36,7 +36,7 @@ export const AuthContextProvider = ({ children }) => {
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ refreshToken: state.user.refreshToken }),
+            body: JSON.stringify({ refreshToken: localStorage.refreshToken }),
           });
 
           if (!response.ok) {

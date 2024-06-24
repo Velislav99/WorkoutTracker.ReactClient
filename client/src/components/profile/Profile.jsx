@@ -148,19 +148,17 @@ const Profile = () => {
           Authorization: `Bearer ${user.accessToken}`,
         },
         body: JSON.stringify({
-          weightKg: parseFloat(weight),
-          bodyFatPercentage: parseFloat(bodyFat),
+          weightKg: weight,
+          bodyFatPercentage: bodyFat,
         }),
       });
-      if (response.ok) {
+      
         const data = await response.json();
         console.log("Personal stats submitted:", data);
         fetchCurrentStats();
         fetchWeightHistory();
         fetchBodyFatHistory();
-      } else {
-        console.error("Error submitting personal stats:", response.status);
-      }
+      
     } catch (error) {
       console.error("Error submitting personal stats:", error);
     }
@@ -192,7 +190,7 @@ const Profile = () => {
               onChange={(e) => setUsername(e.target.value)}
             />
             <Button variant="contained" type="submit" sx={{ mt: 2 }}>
-              Submit
+              Change
             </Button>
           </form>
           <form onSubmit={handlePersonalSubmit}>
