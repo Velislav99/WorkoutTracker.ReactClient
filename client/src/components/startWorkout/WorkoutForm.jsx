@@ -89,7 +89,7 @@ const WorkoutForm = () => {
 
     const handleStartWorkout = () => setStartWorkoutOpen(true);
 
-    const handleRestartWorkout = () => { navigate(0); };
+    const handleRestartWorkout = () => { navigate('/'); };
 
     const handleConfirmStartWorkout = async () => {
         try {

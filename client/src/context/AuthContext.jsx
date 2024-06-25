@@ -20,6 +20,7 @@ export const AuthContextProvider = ({ children }) => {
   });
 
   useLayoutEffect(() => {
+
     const refreshAccessToken = async () => {
       const refreshToken = localStorage.getItem('refreshToken');
       if (refreshToken && !state.accessToken) {
@@ -32,13 +33,7 @@ export const AuthContextProvider = ({ children }) => {
             body: JSON.stringify({ refreshToken }),
           });
 
-          if (!response.ok) {
-            throw new Error('Failed to refresh token');
-          }
-
           const data = await response.json();
-
-          // Update access token in context
           dispatch({ type: 'LOGIN', payload: { accessToken: data.accessToken } });
         } catch (error) {
           console.error('Error refreshing token:', error);
@@ -46,8 +41,11 @@ export const AuthContextProvider = ({ children }) => {
         }
       }
     };
-
     refreshAccessToken();
+    const intervalId = setInterval(refreshAccessToken, 360000);
+
+  // Cleanup function to clear the interval
+    return () => clearInterval(intervalId);
   }, [state.accessToken, dispatch]);
 
   return (
