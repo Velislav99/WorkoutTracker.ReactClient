@@ -33,19 +33,24 @@ export const AuthContextProvider = ({ children }) => {
             body: JSON.stringify({ refreshToken }),
           });
 
+          if (!response.ok) {
+            throw new Error('Failed to refresh token');
+          }
+
           const data = await response.json();
           dispatch({ type: 'LOGIN', payload: { accessToken: data.accessToken } });
+          localStorage.setItem('refreshToken', data.refreshToken);
         } catch (error) {
           console.error('Error refreshing token:', error);
           dispatch({ type: 'LOGOUT' });
         }
       }
     };
-    refreshAccessToken();
-    const intervalId = setInterval(refreshAccessToken, 360000);
 
-  // Cleanup function to clear the interval
-    return () => clearInterval(intervalId);
+    refreshAccessToken();
+    
+    setInterval(refreshAccessToken, 3600000); 
+
   }, [state.accessToken, dispatch]);
 
   return (
