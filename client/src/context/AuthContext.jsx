@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect } from 'react';
+import { createContext, useReducer, useLayoutEffect } from 'react';
 import { baseUrl } from '../shared';
 
 export const AuthContext = createContext();
@@ -6,9 +6,9 @@ export const AuthContext = createContext();
 export const authReducer = (state, action) => {
   switch (action.type) {
     case 'LOGIN':
-      return { user: action.payload };
+      return { accessToken: action.payload.accessToken };
     case 'LOGOUT':
-      return { user: null };
+      return { accessToken: null };
     default:
       return state;
   }
@@ -16,27 +16,21 @@ export const authReducer = (state, action) => {
 
 export const AuthContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, { 
-    user: null 
+    accessToken: null,
   });
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
+  useLayoutEffect(() => {
 
-    if (user) {
-      dispatch({ type: 'LOGIN', payload: user });
-    }
-  }, []);
-
-  useEffect(() => {
-    const refreshToken = async () => {
-      if (state.user && state.user.refreshToken) {
+    const refreshAccessToken = async () => {
+      const refreshToken = localStorage.getItem('refreshToken');
+      if (refreshToken && !state.accessToken) {
         try {
           const response = await fetch(`${baseUrl}refresh`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ refreshToken: localStorage.refreshToken }),
+            body: JSON.stringify({ refreshToken }),
           });
 
           if (!response.ok) {
@@ -44,32 +38,24 @@ export const AuthContextProvider = ({ children }) => {
           }
 
           const data = await response.json();
-
-          localStorage.setItem('accessToken', data.accessToken);
+          dispatch({ type: 'LOGIN', payload: { accessToken: data.accessToken } });
           localStorage.setItem('refreshToken', data.refreshToken);
-          localStorage.setItem('tokenExpiry', Date.now() + data.expiresIn * 1000);
-
-          dispatch({ type: 'LOGIN', payload: { ...state.user, ...data } });
         } catch (error) {
           console.error('Error refreshing token:', error);
+          dispatch({ type: 'LOGOUT' });
         }
       }
     };
 
-    refreshToken();
+    refreshAccessToken();
+    
+    setInterval(refreshAccessToken, 3600000); 
 
-    if (state.user) {
-      const interval = setInterval(() => {
-        refreshToken();
-      }, (localStorage.tokenExpiry - Date.now()) / 2);
-
-      return () => clearInterval(interval);
-    }
-  }, [state.user]);
+  }, [state.accessToken, dispatch]);
 
   return (
     <AuthContext.Provider value={{ ...state, dispatch }}>
-      { children }
+      {children}
     </AuthContext.Provider>
   );
 };

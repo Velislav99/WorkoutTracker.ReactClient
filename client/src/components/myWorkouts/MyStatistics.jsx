@@ -45,28 +45,12 @@ const MyStatistics = () => {
     const [chartData, setChartData] = useState([]);
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [isExercisesFetched, setIsExercisesFetched] = useState(false);
 
-    const { user } = useContext(AuthContext);
+    const { accessToken } = useContext(AuthContext);
 
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-    useEffect(() => {
-        const fetchExercises = async () => {
-            try {
-                const response = await fetch(`${baseUrl}api/Exercise/name`, {
-                    headers: {
-                        'Authorization': `Bearer ${user.accessToken}`
-                    }
-                });
-                const data = await response.json();
-                setExercises(data);
-            } catch (error) {
-                console.error('Error fetching exercises:', error);
-            }
-        };
-        fetchExercises();
-    }, [user]);
 
     useEffect(() => {
         if (exerciseId) {
@@ -79,6 +63,21 @@ const MyStatistics = () => {
         setExerciseId(newValue?.id || null);
     };
 
+    const fetchExercises = async () => {
+        try {
+            const response = await fetch(`${baseUrl}api/Exercise/name`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            const data = await response.json();
+            setExercises(data);
+            setIsExercisesFetched(true);
+        } catch (error) {
+            console.error('Error fetching exercises:', error);
+        }
+    };
+
     const fetchExerciseStats = async (exerciseId, startDate, endDate) => {
         let url = `${baseUrl}api/Exercise/Stats?exerciseNameId=${exerciseId}`;
         if (startDate) url += `&startDate=${startDate}`;
@@ -86,7 +85,7 @@ const MyStatistics = () => {
         try {
             const response = await fetch(url, {
                 headers: {
-                    Authorization: `Bearer ${user.accessToken}`,
+                    Authorization: `Bearer ${accessToken}`,
                 }
             });
             const data = await response.json();
@@ -131,6 +130,11 @@ const MyStatistics = () => {
                             options={exercises}
                             getOptionLabel={(option) => option.value}
                             onChange={handleExerciseChange}
+                            onOpen={() => {
+                                if (!isExercisesFetched) {
+                                    fetchExercises();
+                                }
+                            }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}

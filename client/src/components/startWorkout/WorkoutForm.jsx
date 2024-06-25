@@ -15,23 +15,23 @@ const WorkoutForm = () => {
     const [startWorkoutOpen, setStartWorkoutOpen] = useState(false);
     const [workoutName, setWorkoutName] = useState('');
     const [workoutId, setWorkoutId] = useState(null);
-    const [exercises, setExercises] = useState([]);
     const [parameterNames, setParameterNames] = useState([]);
     const [submittedExercises, setSubmittedExercises] = useState([]);
     const [workoutComment, setWorkoutComment] = useState('');
     const [workoutTime, setWorkoutTime] = useState(``);
     const [buttonVisible, setButtonVisible] = useState(true);
 
-    const { user } = useAuthContext();
+    const { accessToken } = useAuthContext();
 
     const navigate = useNavigate();
+
 
     useEffect(() => {
         async function fetchIsActive() {
             try {
                 let response = await fetch(`${baseUrl}api/Workout/HasActive`, {
                     headers: {
-                        Authorization: `Bearer ${user.accessToken}`,
+                        Authorization: `Bearer ${accessToken}`,
                     }
                 });
                 response = await response.json();
@@ -52,27 +52,13 @@ const WorkoutForm = () => {
         }
 
         fetchIsActive();
-    }, [user.accessToken]);
-
-    const fetchExercises = async () => {
-        try {
-            const response = await fetch(`${baseUrl}api/Exercise/name`, {
-                headers: {
-                    'Authorization': `Bearer ${user.accessToken}`
-                }
-            });
-            const data = await response.json();
-            setExercises(data);
-        } catch (error) {
-            console.error('Error fetching exercises:', error);
-        }
-    };
+    }, [accessToken]);
 
     const fetchParameterNames = async () => {
         try {
             const response = await fetch(`${baseUrl}api/Exercise/parameter/name/all`, {
                 headers: {
-                    'Authorization': `Bearer ${user.accessToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 }
             });
             const data = await response.json();
@@ -83,20 +69,19 @@ const WorkoutForm = () => {
     };
 
     useEffect(() => {
-        fetchExercises();
         fetchParameterNames();
-    }, [user.accessToken]);
+    }, [accessToken]);
 
     const handleStartWorkout = () => setStartWorkoutOpen(true);
 
-    const handleRestartWorkout = () => { navigate(0); };
+    const handleRestartWorkout = () => { navigate('/'); };
 
     const handleConfirmStartWorkout = async () => {
         try {
             const response = await fetch(`${baseUrl}api/Workout/Start/${workoutName}`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${user.accessToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -114,7 +99,7 @@ const WorkoutForm = () => {
             const response = await fetch(`${baseUrl}api/Workout/End?workoutId=${workoutId}`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${user.accessToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(workoutComment)
@@ -166,7 +151,7 @@ const WorkoutForm = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        sx={{ padding: '10px 25px', fontSize: '1.2rem', }}
+                        sx={{ padding: '10px 25px', fontSize: '1.2rem', marginLeft: '1.8rem'}}
                         onClick={handleStartWorkout}
                     >
                         Start Workout
@@ -239,10 +224,10 @@ const WorkoutForm = () => {
             <ExerciseForm
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
-                exercises={exercises}
+               
                 parameterNames={parameterNames}
                 workoutId={workoutId}
-                user={user}
+                accessToken={accessToken}
                 submittedExercises={submittedExercises}
                 setSubmittedExercises={setSubmittedExercises}
             />

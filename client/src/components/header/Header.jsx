@@ -15,7 +15,7 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
  
   const navigate = useNavigate();
-  const { user } = useAuthContext();
+  const { accessToken } = useAuthContext();
   const location = useLocation();
   const [activePage, setActivePage] = React.useState(location.pathname);
  
@@ -41,7 +41,7 @@ function Header() {
 
   const handleLogout = () => {
     navigate(0);
-    localStorage.removeItem('user');
+    localStorage.removeItem('refreshToken');
     dispatch({ type: 'LOGOUT' });
     handleCloseUserMenu();
   };
@@ -176,7 +176,7 @@ function Header() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {user ? (
+              {accessToken ? (
                 loggedInSettings.map((setting) =>
                   setting === 'Logout' ? (
                     <MenuItem

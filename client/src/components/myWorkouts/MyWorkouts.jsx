@@ -21,7 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import MyStatistics from './MyStatistics';
 
 const MyWorkouts = () => {
-    const { user } = useAuthContext();
+    const { accessToken } = useAuthContext();
     const [myWorkouts, setMyWorkouts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [workoutDetails, setWorkoutDetails] = useState(null);
@@ -35,7 +35,7 @@ const MyWorkouts = () => {
             try {
                 const response = await fetch(`${baseUrl}api/Workout/MyWorkouts`, {
                     headers: {
-                        Authorization: `Bearer ${user.accessToken}`,
+                        Authorization: `Bearer ${accessToken}`,
                     }
                 });
 
@@ -53,17 +53,17 @@ const MyWorkouts = () => {
             }
         }
 
-        if (user?.accessToken) {
+        if (accessToken) {
             fetchMyWorkouts();
         }
-    }, [user]);
+    }, []);
 
     const handleWorkoutClick = async (workoutId) => {
         setDetailsLoading(true);
         try {
             const response = await fetch(`${baseUrl}api/Workout/details/${workoutId}`, {
                 headers: {
-                    Authorization: `Bearer ${user.accessToken}`,
+                    Authorization: `Bearer ${accessToken}`,
                 }
             });
 
