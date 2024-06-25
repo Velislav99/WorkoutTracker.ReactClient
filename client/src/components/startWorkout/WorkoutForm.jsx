@@ -26,7 +26,34 @@ const WorkoutForm = () => {
     const navigate = useNavigate();
 
 
+    useEffect(() => {
+        async function fetchIsActive() {
+            try {
+                let response = await fetch(`${baseUrl}api/Workout/HasActive`, {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                    }
+                });
+                response = await response.json();
 
+                if (response.hasActiveWorkout) {
+                    setWorkoutStarted(true);
+                    setWorkoutName(response.workout.name);
+                    setWorkoutId(response.workout.id);
+                    setSubmittedExercises(response.workout.exercises.map(exercise => ({
+                        selectedExercise: { value: exercise.name },
+                        parameters: exercise.parameters
+                    })));
+
+                }
+            } catch (error) {
+                console.error('Error fetching active workout:', error);
+            }
+        }
+
+        fetchIsActive();
+    }, [accessToken]);
+    
     const fetchParameterNames = async () => {
         try {
             const response = await fetch(`${baseUrl}api/Exercise/parameter/name/all`, {
