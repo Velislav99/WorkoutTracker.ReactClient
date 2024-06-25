@@ -16,7 +16,7 @@ import './global.css';
 import Profile from './components/profile/Profile';
 
 function App() {
-  const { user } = useAuthContext();
+  const { accessToken } = useAuthContext();
 
   return (
     <BrowserRouter>
@@ -38,11 +38,11 @@ function App() {
         > 
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-            <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
-            <Route path="/start-workout" element={user ? <StartWorkout /> : <Navigate to="/login" />} />
-            <Route path="/my-workouts" element={user ? <MyWorkouts /> : <Navigate to="/login" />} />
-            <Route path="/profile" element={user ? <Profile /> : <Navigate to="/login" />} />
+            <Route path="/login" element={!accessToken ? <Login /> : <Navigate to="/" />} />
+            <Route path="/register" element={!accessToken ? <Register /> : <Navigate to="/" />} />
+            <Route path="/start-workout" element={accessToken ? <StartWorkout /> : <Navigate to="/login" />} />
+            <Route path="/my-workouts" element={accessToken ? <MyWorkouts /> : <Navigate to="/login" />} />
+            <Route path="/profile" element={accessToken ? <Profile /> : <Navigate to="/login" />} />
           </Routes>
         </Box>
         <Footer />

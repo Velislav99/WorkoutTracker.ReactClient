@@ -22,7 +22,7 @@ const WorkoutForm = () => {
     const [workoutTime, setWorkoutTime] = useState(``);
     const [buttonVisible, setButtonVisible] = useState(true);
 
-    const { user } = useAuthContext();
+    const { accessToken } = useAuthContext();
 
     const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const WorkoutForm = () => {
             try {
                 let response = await fetch(`${baseUrl}api/Workout/HasActive`, {
                     headers: {
-                        Authorization: `Bearer ${user.accessToken}`,
+                        Authorization: `Bearer ${accessToken}`,
                     }
                 });
                 response = await response.json();
@@ -52,13 +52,13 @@ const WorkoutForm = () => {
         }
 
         fetchIsActive();
-    }, [user.accessToken]);
+    }, [accessToken]);
 
     const fetchExercises = async () => {
         try {
             const response = await fetch(`${baseUrl}api/Exercise/name`, {
                 headers: {
-                    'Authorization': `Bearer ${user.accessToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 }
             });
             const data = await response.json();
@@ -72,7 +72,7 @@ const WorkoutForm = () => {
         try {
             const response = await fetch(`${baseUrl}api/Exercise/parameter/name/all`, {
                 headers: {
-                    'Authorization': `Bearer ${user.accessToken}`
+                    'Authorization': `Bearer ${accessToken}`
                 }
             });
             const data = await response.json();
@@ -85,7 +85,7 @@ const WorkoutForm = () => {
     useEffect(() => {
         fetchExercises();
         fetchParameterNames();
-    }, [user.accessToken]);
+    }, [accessToken]);
 
     const handleStartWorkout = () => setStartWorkoutOpen(true);
 
@@ -96,7 +96,7 @@ const WorkoutForm = () => {
             const response = await fetch(`${baseUrl}api/Workout/Start/${workoutName}`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${user.accessToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
                 }
             });
@@ -114,7 +114,7 @@ const WorkoutForm = () => {
             const response = await fetch(`${baseUrl}api/Workout/End?workoutId=${workoutId}`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${user.accessToken}`,
+                    'Authorization': `Bearer ${accessToken}`,
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(workoutComment)
@@ -242,7 +242,7 @@ const WorkoutForm = () => {
                 exercises={exercises}
                 parameterNames={parameterNames}
                 workoutId={workoutId}
-                user={user}
+                accessToken={accessToken}
                 submittedExercises={submittedExercises}
                 setSubmittedExercises={setSubmittedExercises}
             />

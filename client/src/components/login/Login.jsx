@@ -30,16 +30,11 @@ const LoginForm = () => {
 
       const data = await response.json();
       
-      localStorage.setItem('user', JSON.stringify(data));
-      localStorage.setItem('accessToken', data.accessToken);
+      // Store access token in context state and refresh token in localStorage
+      dispatch({ type: 'LOGIN', payload: { accessToken: data.accessToken } });
       localStorage.setItem('refreshToken', data.refreshToken);
-      localStorage.setItem('tokenExpiry', data.expiresIn );
 
-      dispatch({ type: 'LOGIN', payload: data });
-
-      if (data.accessToken) {
-        navigate('/');
-      }
+      navigate('/');
     } catch (error) {
       console.error('Error:', error);
       setError('Invalid email or password');

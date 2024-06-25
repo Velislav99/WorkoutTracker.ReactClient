@@ -35,7 +35,7 @@ const Profile = () => {
   const [weightHistory, setWeightHistory] = useState([]);
   const [bodyFatHistory, setBodyFatHistory] = useState([]);
   const [currentStats, setCurrentStats] = useState({ weightKilograms: 0, bodyFatPercentage: 0 });
-  const { user } = useAuthContext();
+  const { accessToken } = useAuthContext();
   
   useEffect(() => {
     fetchCurrentStats();
@@ -48,7 +48,7 @@ const Profile = () => {
     try {
       const response = await fetch(`${baseUrl}api/User/PersonalStats`, {
         headers: {
-            Authorization: `Bearer ${user.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
         },
       });
       if (response.ok) {
@@ -66,7 +66,7 @@ const Profile = () => {
     try {
       const response = await fetch(`${baseUrl}api/User/WeightHistory`, {
         headers: {
-            Authorization: `Bearer ${user.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
         },
       });
       if (response.ok) {
@@ -84,7 +84,7 @@ const Profile = () => {
     try {
       const response = await fetch(`${baseUrl}api/User/BodyFatPercentageHistory`, {
         headers: {
-            Authorization: `Bearer ${user.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
         },
       });
       if (response.ok) {
@@ -102,7 +102,7 @@ const Profile = () => {
     try {
       const response = await fetch(`${baseUrl}api/User/Username`, {
         headers: {
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       if (response.ok) {
@@ -123,7 +123,7 @@ const Profile = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ username }),
       });
@@ -145,7 +145,7 @@ const Profile = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${user.accessToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           weightKg: weight,
