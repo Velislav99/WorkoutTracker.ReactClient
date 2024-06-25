@@ -53,7 +53,7 @@ const WorkoutForm = () => {
 
         fetchIsActive();
     }, [accessToken]);
-    
+
     const fetchParameterNames = async () => {
         try {
             const response = await fetch(`${baseUrl}api/Exercise/parameter/name/all`, {
@@ -151,7 +151,7 @@ const WorkoutForm = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        sx={{ padding: '10px 25px', fontSize: '1.2rem', }}
+                        sx={{ padding: '10px 25px', fontSize: '1.2rem', marginLeft: '1.8rem'}}
                         onClick={handleStartWorkout}
                     >
                         Start Workout
