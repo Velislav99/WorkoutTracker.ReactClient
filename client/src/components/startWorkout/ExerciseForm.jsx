@@ -4,10 +4,12 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { baseUrl } from '../../shared';
 
-const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, accessToken, submittedExercises, setSubmittedExercises }) => {
+const ExerciseForm = ({ isOpen, onClose, parameterNames, workoutId, accessToken, submittedExercises, setSubmittedExercises }) => {
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [parameters, setParameters] = useState([]);
     const [formError, setFormError] = useState('');
+    const [exercises, setExercises] = useState([]);
+    const [isExercisesFetched, setIsExercisesFetched] = useState(false);
 
     const handleAddParameter = () => {
         setParameters([...parameters, { name: '', value: '' }]);
@@ -39,6 +41,22 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, a
         setParameters([]);
         setFormError('');
     };
+
+    const fetchExercises = async () => {
+        try {
+            const response = await fetch(`${baseUrl}api/Exercise/name`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            const data = await response.json();
+            setExercises(data);
+            setIsExercisesFetched(true);
+        } catch (error) {
+            console.error('Error fetching exercises:', error);
+        }
+    };
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -109,6 +127,11 @@ const ExerciseForm = ({ isOpen, onClose, exercises, parameterNames, workoutId, a
                             options={exercises}
                             getOptionLabel={(option) => option.value}
                             onChange={handleExerciseChange}
+                            onOpen={() => {
+                                if (!isExercisesFetched) {
+                                    fetchExercises();
+                                }
+                            }}
                             renderInput={(params) => (
                                 <TextField
                                     {...params}

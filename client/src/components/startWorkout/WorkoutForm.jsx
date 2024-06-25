@@ -15,7 +15,6 @@ const WorkoutForm = () => {
     const [startWorkoutOpen, setStartWorkoutOpen] = useState(false);
     const [workoutName, setWorkoutName] = useState('');
     const [workoutId, setWorkoutId] = useState(null);
-    const [exercises, setExercises] = useState([]);
     const [parameterNames, setParameterNames] = useState([]);
     const [submittedExercises, setSubmittedExercises] = useState([]);
     const [workoutComment, setWorkoutComment] = useState('');
@@ -26,47 +25,7 @@ const WorkoutForm = () => {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        async function fetchIsActive() {
-            try {
-                let response = await fetch(`${baseUrl}api/Workout/HasActive`, {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    }
-                });
-                response = await response.json();
 
-                if (response.hasActiveWorkout) {
-                    setWorkoutStarted(true);
-                    setWorkoutName(response.workout.name);
-                    setWorkoutId(response.workout.id);
-                    setSubmittedExercises(response.workout.exercises.map(exercise => ({
-                        selectedExercise: { value: exercise.name },
-                        parameters: exercise.parameters
-                    })));
-
-                }
-            } catch (error) {
-                console.error('Error fetching active workout:', error);
-            }
-        }
-
-        fetchIsActive();
-    }, [accessToken]);
-
-    const fetchExercises = async () => {
-        try {
-            const response = await fetch(`${baseUrl}api/Exercise/name`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
-            const data = await response.json();
-            setExercises(data);
-        } catch (error) {
-            console.error('Error fetching exercises:', error);
-        }
-    };
 
     const fetchParameterNames = async () => {
         try {
@@ -83,7 +42,6 @@ const WorkoutForm = () => {
     };
 
     useEffect(() => {
-        fetchExercises();
         fetchParameterNames();
     }, [accessToken]);
 
@@ -239,7 +197,7 @@ const WorkoutForm = () => {
             <ExerciseForm
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
-                exercises={exercises}
+               
                 parameterNames={parameterNames}
                 workoutId={workoutId}
                 accessToken={accessToken}
