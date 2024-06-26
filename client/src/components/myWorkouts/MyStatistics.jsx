@@ -96,23 +96,35 @@ const MyStatistics = () => {
     };
 
     const parseChartData = (data) => {
-        const dates = data.map(entry => entry.dateTime.split('T')[0]);
-        const parametersMap = new Map();
+        const dateParameterMap = new Map();
 
         data.forEach(entry => {
+            const date = entry.dateTime.split('T')[0];
+            if (!dateParameterMap.has(date)) {
+                dateParameterMap.set(date, new Map());
+            }
+            const parametersMap = dateParameterMap.get(date);
+
             entry.parameters.forEach(param => {
-                if (!parametersMap.has(param.name)) {
-                    parametersMap.set(param.name, Array(data.length).fill(null));
+                if (!parametersMap.has(param.name) || parametersMap.get(param.name) < param.value) {
+                    parametersMap.set(param.name, param.value);
                 }
-                const paramArray = parametersMap.get(param.name);
-                const index = dates.indexOf(entry.dateTime.split('T')[0]);
-                paramArray[index] = param.value;
             });
         });
 
         const parsedData = [];
-        parametersMap.forEach((values, key) => {
-            parsedData.push({ label: key, data: values, dates });
+        const dates = Array.from(dateParameterMap.keys()).sort();
+
+        dates.forEach(date => {
+            const parametersMap = dateParameterMap.get(date);
+            parametersMap.forEach((value, name) => {
+                let paramData = parsedData.find(p => p.label === name);
+                if (!paramData) {
+                    paramData = { label: name, data: Array(dates.length).fill(null), dates };
+                    parsedData.push(paramData);
+                }
+                paramData.data[dates.indexOf(date)] = value;
+            });
         });
 
         setChartData(parsedData);
