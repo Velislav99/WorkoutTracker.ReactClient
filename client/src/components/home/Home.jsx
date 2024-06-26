@@ -53,14 +53,14 @@ export default function Home() {
                     zIndex: 3,
                 }}
             >
-                <Typography variant="h3" gutterBottom fontFamily={'"Segoe UI"'} style={{ fontWeight: 'bold' }}>
+                <Typography variant="h3" gutterBottom fontFamily={'"Segoe UI"'} style={{ fontWeight: 'bold', marginRight: '3rem' }}>
                     {quote}
                 </Typography>
 
-                <Typography variant="h5" gutterBottom fontFamily={'"Segoe UI"'}>
+                <Typography variant="h5" style={{marginRight:'3rem'}} gutterBottom fontFamily={'"Segoe UI"'}>
                     - {author}
                 </Typography>
-                <Button variant='contained' LinkComponent={Link} to = '/start-workout'>Start your workout</Button>
+                <Button variant='contained' style={{marginRight:'3rem'}} LinkComponent={Link} to = '/start-workout'>Start your workout</Button>
 
             </Box>
         </Box>
