@@ -36,7 +36,7 @@ function Header() {
   };
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
+    setAnchorElUser(null)
   };
 
   const handleLogout = () => {
