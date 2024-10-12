@@ -12,7 +12,7 @@ export default function StartWorkout() {
                 justifyContent: 'center',
                 padding: '1rem',
                 height: '100vh',
-                backgroundImage: 'url("https://as2.ftcdn.net/v2/jpg/08/09/48/25/1000_F_809482598_iFY3RUsAXrpaJAuFh2UijLuLhGMQYJDb.jpg")',
+                backgroundImage: 'url("https://png.pngtree.com/background/20230528/original/pngtree-an-empty-gym-with-some-equipment-and-dark-walls-picture-image_2773763.jpg")',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',

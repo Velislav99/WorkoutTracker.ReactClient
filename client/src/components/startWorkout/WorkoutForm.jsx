@@ -186,15 +186,14 @@ const WorkoutForm = () => {
                         variant="contained"
                         color="primary"
                         sx={{
-                            fontSize: '3.5rem',
+                            fontSize: '1.5rem',
                             margin: '1rem',
                             minWidth: '8vh',
                             height: '8vh',
 
                         }}
                         onClick={() => setIsOpen(true)}
-                    >
-                        +
+                    > add
                     </Button>
 
 
@@ -202,7 +201,7 @@ const WorkoutForm = () => {
                         variant="contained"
                         color="secondary"
                         sx={{
-                            fontSize: '2rem',
+                            fontSize: '1.5rem',
                             marginRight: '2rem',
                             height: '8vh',
                         }}

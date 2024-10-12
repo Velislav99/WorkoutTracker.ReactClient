@@ -1,25 +1,17 @@
 import { Button, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box } from '@mui/system';
 import { trackingInContractBck } from './HomeAnimations';
 import { Link } from 'react-router-dom';
+import quotes from '../../quotes.json';
 
 export default function Home() {
+    // Get a random quote from the quotes array
+    const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
-    const [quote, setQuote] = useState('');
-    const [author, setAuthor] = useState('');
-
-    useEffect(() => {
-        fetch('https://type.fit/api/quotes')
-            .then(response => response.json())
-            .then(data => {
-                const randomIndex = Math.floor(Math.random() * data.length);
-                const { text, author } = data[randomIndex];
-                const newAuthor = author ? author.split(',')[0] : 'Unknown';
-                setQuote(text);
-                setAuthor(newAuthor);
-            });
-    }, []);
+    // Determine font size based on quote length
+    const isLongQuote = randomQuote.quote.length > 100;
+    const quoteFontSize = isLongQuote ? '1.5rem' : '2.5rem';
 
     return (
         <Box position="relative" width="100%" height="100vh">
@@ -53,15 +45,31 @@ export default function Home() {
                     zIndex: 3,
                 }}
             >
-                <Typography variant="h3" gutterBottom fontFamily={'"Segoe UI"'} style={{ fontWeight: 'bold', marginRight: '3rem' }}>
-                    {quote}
+                <Typography
+                    variant="h3"
+                    gutterBottom
+                    fontFamily={'"Segoe UI"'}
+                    style={{
+                        fontWeight: 'bold',
+                        marginRight: '3rem',
+                        fontSize: quoteFontSize
+                    }}
+                >
+                    {randomQuote.quote}
+                </Typography>
+                <Typography
+                    variant="h6"
+                    gutterBottom
+                    fontFamily={'"Segoe UI"'}
+                    style={{
+                        fontStyle: 'italic',
+                        marginRight: '3rem'
+                    }}
+                >
+                    – {randomQuote.author}
                 </Typography>
 
-                <Typography variant="h5" style={{marginRight:'3rem'}} gutterBottom fontFamily={'"Segoe UI"'}>
-                    - {author}
-                </Typography>
-                <Button variant='contained' style={{marginRight:'3rem'}} LinkComponent={Link} to = '/start-workout'>Start your workout</Button>
-
+                <Button variant='contained' style={{marginRight:'3rem'}} LinkComponent={Link} to='/start-workout'>Start your workout</Button>
             </Box>
         </Box>
     );
