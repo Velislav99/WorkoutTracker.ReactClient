@@ -16,7 +16,7 @@ export default function Home() {
     return (
         <Box position="relative" width="100%" height="100vh">
             <img
-                src="https://as2.ftcdn.net/v2/jpg/08/09/48/25/1000_F_809482598_iFY3RUsAXrpaJAuFh2UijLuLhGMQYJDb.jpg"
+                src="https://png.pngtree.com/background/20230528/original/pngtree-an-empty-gym-with-some-equipment-and-dark-walls-picture-image_2773763.jpg"
                 alt="Full Screen Image"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }}
             />
